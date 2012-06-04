@@ -1,0 +1,101 @@
+Ah Fuck:
+[ ] We figure out the ToShootAzimuth based on lat long ecef blah blah.   Which means whatever angle we come up with will be TRUE...yet our ahrs gives us magnetic.  to ToShootAzimuth, and positionMe.Yaw_mrad are always gonna be fucked by the declination.  fix this in the calibration, (lining up what would be a kill shot and press the cal button.
+	-Note: We've made everything work in True, by adding a declination for now.  Calibration will have ot be added later.
+
+Testing:
+[x] gps antenna soldered to ground plane or not experiment...time to get solution for each: A: ~5 seconds slower without the antenna casing touching the ground plane.  4 trials conducted, 2 touching, 2 with tape between antenna and foil ground plane.
+[ ] Go through Jeff's Old R&D emails on imu accuracy/precision... establish:
+	[ ] 1) Is there a problem, specifically with the mag...
+	[ ] 2) How bad is it, and do we care...is there a work around?
+	Note: 18Mar2012 - I'm worried that our imu has some problem still.  The code checked in tonight (rev 86) outputs yaw_mrad and pitch_mrad when yaw < 100 and -100<pitch<100..but the pitch displayed is clearly not mrads...nor degrees... and it jumps around a lot.
+[x] test DLC implementation with fakeradiostream
+[ ] test DLC implementation with two DF's, once it's been implemented in Firingsoln
+	[ ] Line 176 in radio sometimes throws an out of range error.  (Array.Copy(bigBuffer, msgLengthDLC, bigBuffer, 0, tailIndex);).  
+		Somehow tailindex becomes -5.  i think it might have something to do with copying new information into bigbuffer while Parse is still trying to run.  The error never comes when debugging pressing F11, F11, F11, only when running fullspeed.  
+		When we have the radio's linked, printout tailindex at the end of every parse, and verify it never goes negative.
+[ ] Build up testing to two dogfighters
+	[ ] Original Insert Test buffer with Mt Def
+	[ ] emulate the radio with a slightly changing mt def
+	[ ] two dogfighters.
+
+
+Hardware:
+[ ] radio RSSI led
+
+Software:
+[x] Netduino Lockup
+	-Thread.Sleeping causing problems?  Blink(314159) causing problems?  
+	[x] Root cause established, (<smirk> or no longer reproducable):  A: No longer reproducable with new BlinkyBlink thread being totally separate from Blink().
+[ ] update gpsLed stale data method:  // We're doing this check twice..once here, and once in PositionComputer where we decide whether or not to zero out the gpsTime and dop.  Instead of storing the gpsTimeLast and TimeNew in Mane.  Store them in the instance of PositionComputer that we've created, and do the check only once, in that location.  Then don't even bother turning on gpsLed from that location, just create an AttNav that' flagged as stale.  Downstream in firingSolution, do the AttNav stale data check first, and turn the Led on from there.  It's where you're going to have to do an EnemyStale check anyway.
+[ ] implement deadLedControl
+[ ] identify radio baud rate, and confirm code in radio.cs is using the correct rate:  private const int rate = 38400;
+[ ] identify stale Enemy data.  Having the AttNav zero out GPS time is useful, but only covers the condition where the radio link is good, but enemy has stopped making good attnavs.  Need to also cover the condition where enemy is making good attnavs, but radio link dies, so we're left with the last good attnav that enemy made...perhaps we don't identify stale enemy, just flag off no radio link...
+[ ] SD Card logging
+[ ] add library of declination based on location.  currently it's hardcoded.
+
+
+Specifically NEXT (5/18/2012):
+[ ] get dlcToEnemy to work. (currently commented out in the checkin, firingsolution.cs (5/18)
+[ ] Connect the xbee's and see if you can share basic info across them.
+[ ] stop putting next steps in the check in, and put it in the next steps file.
+[ ] let it sit in one spot for a while, record the toShootAzimuth (which shouldn't change while stationary), and see how much it moves while sitting still.
+
+
+Documentation:
+[ ] User Manual
+	[ ] initial start up states
+	[x] led states and meanings
+	[ ] 
+   
+Purchasing:
+[ ] Male Breakaway headers
+[ ]  LEDs
+   
+   
+   
+Someday Maybe (regularly re-prioritize bigger wants to the top):
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[ ] add voltage sense circuit & report to debur or LED
+[ ] implement chat
+
+
+
+
+
+
+
+
+Completed Tasks (oldest at the bottom):
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[x] female socket headers
+[x] AMP EMT 2,3,4 connectors: male houseings, female housings, male pins, female sockets
+[x] crimper for AMP EMT connectors
+[x] firm up hardware setup
+[x] Not current data flag
+	[x] Get GPS time involved so that inside of firing solution if shitIn has the same timestamp as sampleToUse, we reject it and turn on a stale data light.
+[x] make it easy to disconnect power to the razor, so that we can deploy code without the serialport being hit with razor data...it might already be like this, but if not, rev1.
+[x] range check radios		
+	A:  600 meter range success.
+[ x] imu point north to confirm calibration	A: Completed, but needs work.  Future work on this falls under the Netduino lock up problem
+	[x] Add functionality to Led.cs to allow different blinking patterns...this should be replaced by adding more Led's in future
+	[x] Solve the north pole problem, are we overrunning something?
+	[x] Investigate how to keep blink from flickering because it's always re-commanding the blink thread.  We used to do this by having a if(blinking) then return...but does this return mean that it won't change the rate properly? ... need to investigate
+	[x] Add more Led's to our general setup
+[x] do a power budget check on netduino's 3.3V capaicty
+	A: The 3.3V LDO is good for ~800mA, but suggested no more than 500mA due to inefficiently and heat.  currently venus + xBee + razor is 90mA + 210mA + 40mA(WAG) = 318.  add a 50% fudge factor = 320*1.5 = 480mA.  we're good. 
+[ ] add LED debuggging		
+	A:  Not completely finished, but a good start, then altered.  These are and will forever be documented/updated in Usermanual.txt
+	[ ] 0) All operation is normal		gpsLed On;	imuLed	Off;	radioLed blink;	statusLed On;
+	[x] 1) weak GPS solution			gpsLed Blinking with rate, at an acceptable point, gpsLed goes solid. (superseaded by positionMe being stale)
+	[x] 2) IMU facing north and level	imuLed blinking the pattern;
+	[x] 3) PositionMe is stale			gpsLed blinking the pattern;
+	[x] 4) PositionEnemy is stale		statusLed blinking;  // based off positionEnemy haveing a 0 positionDOP and 0gps time...assumes that if the radio link is good...position enemies are being received
+	[ ] 5) No radio link				radioLed off;
+	[ ] Consider making one of the led's a triggerLed...it's nice to know that pulling the trigger is registering..so trigger led lights up, then if it's a kill, the killLed lights up too.
+	
+[x] Add the proper if statements or just the else, to turn Off the north Led etc.
+[x] Add GPS time and uncertainty to LineGPS...
+[x] Use the GPS Time stamp to check if an Attnav is too old...if it is..turn of the metal detector, or blink 314159
+[x] Use GPS uncert to "turn on" the GPS uncert led from position computer's recievedLineGPS event handler the same way you "turned on" the northLed.
+
+

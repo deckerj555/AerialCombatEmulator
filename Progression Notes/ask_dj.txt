@@ -1,0 +1,9 @@
+wireshark demo: see (reconstruct?) deckercam frames and password
+how tall is a stack?  how many pushes can a stack accommodate?  that is, how many pushes = 1 byte?
+what is the instruction statck and where does it live relative to the _other_ (results?) stack
+what's the purpose of a constructor?
+is it a normal 'best practice' to have a whole shit tonne (metric) of stuff happening in a constructor?
+if a subclass accesses its base class with the base keyword, must the methods be mutally exclusive? pg 250 in HeadFirstCSharp
+what's the difference between a _field_ and a _property_? other than the icon in the IDE?
+is it true that the 'set' and 'get' accessors are only in a constructor?
+how to execute dos commands?  with a 'BANG'? i want to write a shutdown -s script that has a warning 'are you sure?' window.

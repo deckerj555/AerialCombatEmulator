@@ -1,0 +1,82 @@
+ok--here's the output you should expect from the razor dealie bob (@57600 bps):
+
+Sparkfun 9DOF Razor AHRS
+264
+256
+261
+20
+165
+-70
+!-0.02,0.02,-0.02,257,262,265,21,165,178,0,0,0
+!-0.04,0.01,-0.04,257,262,265,19,166,179,0,0,0
+!-0.03,0.05,-0.06,257,262,265,20,165,178,0,0,0
+!-0.05,0.07,-0.07,257,262,265,21,165,178,0,0,0
+!-0.06,0.06,-0.07,257,261,265,20,165,179,0,0,0
+!-0.07,0.07,-0.09,257,262,265,20,165,177,231,304,537
+!-0.08,0.06,-1.26,256,262,265,19,166,178,231,304,537
+!-0.07,0.10,-2.35,257,262,265,21,165,178,231,304,537
+!-0.08,0.08,-3.48,257,262,265,20,165,179,231,304,537
+!-0.09,0.07,-4.52,256,261,265,21,166,177,231,304,537
+!-0.08,0.06,-5.62,257,262,265,21,166,179,231,304,537
+!-0.08,0.05,-6.65,257,262,266,20,166,179,232,306,537
+!-0.07,0.05,-7.71,256,262,265,21,166,180,232,306,537
+!-0.06,0.04,-8.70,257,262,265,20,166,178,232,306,537
+!-0.05,0.05,-9.73,257,262,265,21,165,178,232,306,537
+!-0.06,0.02,-10.68,256,262,265,20,165,177,232,306,537
+!-0.07,0.04,-11.67,257,262,265,20,166,178,232,306,537
+!-0.06,0.05,-12.58,257,261,265,19,165,179,238,301,534
+!-0.08,0.10,-13.60,257,262,265,20,165,180,238,301,534
+!-0.09,0.09,-14.46,256,262,265,21,166,179,238,301,534
+!-0.07,0.07,-15.36,257,262,265,21,166,179,238,301,534
+!-0.06,0.06,-16.19,257,262,265,21,165,180,238,301,534
+!-0.07,0.05,-17.03,257,261,265,20,165,178,238,301,534
+!-0.08,0.06,-17.83,257,262,265,19,166,178,234,305,540
+!-0.07,0.10,-18.75,257,262,265,20,165,178,234,305,540
+!-0.08,0.11,-19.53,257,262,265,20,165,178,234,305,540
+!-0.09,0.12,-20.34,257,262,265,21,165,180,234,305,540
+
+that is:
+!roll_angle,pitch_angle,yaw_angle,rotational_rate_1,rotational_rate_2,rotational_rate_3,accel_1,accel_2,accel_3,mag_x,mag_y,mag_z
+
+the rates and accels are generic because i can't (quickly and effortlessly) find where 1 = x, 2 = z, etc.
+
+the angles are in degrees; i forget what the gyros, accels, and mag units are.  
+
+i know each line ends with \r\n, but can't swear to the order (e.g. \r\n vs \n\r.)
+
+and just for kicks the print output statements are this:
+
+void printdata(void)
+{    
+      Serial.print("!");
+      #if PRINT_EULER == 1
+      Serial.print(ToDeg(roll)); 
+      Serial.print(",");
+      Serial.print(ToDeg(pitch));
+      Serial.print(",");
+      Serial.print(ToDeg(yaw));
+      #endif      
+      #if PRINT_ANALOGS==1
+//      Serial.print(",AN:");  edited for lowell's LineIMU class 6 July 2011
+      Serial.print(",");
+      Serial.print(AN[sensors[0]]);  //(int)read_adc(0)
+      Serial.print(",");
+      Serial.print(AN[sensors[1]]);
+      Serial.print(",");
+      Serial.print(AN[sensors[2]]);  
+      Serial.print(",");
+      Serial.print(ACC[0]);
+      Serial.print (",");
+      Serial.print(ACC[1]);
+      Serial.print (",");
+      Serial.print(ACC[2]);
+      Serial.print(",");
+      Serial.print(magnetom_x);
+      Serial.print (",");
+      Serial.print(magnetom_y);
+      Serial.print (",");
+      Serial.print(magnetom_z);      
+      #endif
+      Serial.println();    
+      
+}

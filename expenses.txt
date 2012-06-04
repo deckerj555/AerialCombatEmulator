@@ -1,0 +1,5 @@
+17 March 2012 - jpd - radio shack 			- 3.00
+05 March 2012 - jpd - pololu 				- 69.74
+03 March 2012 - jpd - sparkfun 				- 53.59
+24 Febru 2012 - ltn	- sparkfun venus		- 53.59
+24 Febru 2012 - ltn - sparkfun SDcrds etc	- 43.39

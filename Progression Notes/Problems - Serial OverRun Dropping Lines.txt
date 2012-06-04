@@ -1,0 +1,16 @@
+2011_07_26
+As serial data comes into the buffer, the algorithm should identify a line, and send it on to LineIMU to be parsed.
+But the parsing is throwing an error because suddenly it's hitting an ! that it shouldn't.
+Below you see the problem, part of a line got cutoff, and the part cutoff was the \r\n, so the line wasn't properly identified in the buffer.
+
+!0.06,-0.17,135.88,380,384,388,!0.08,-0.16,135.89,379,384,387,6,-11,236,-211,-202,631
+!0.07,-0.14,135.90,380,384,387,7,-11,235,-211,-202,631
+!0.07,-0.14,135.92,380,384,387,7,-11,237,-211,-202,631
+!0.04,-0.16,135.93,379,384,388,6,-10,236,-211,-202,631
+!0.07
+
+Solution:
+1) Change the identify a line parsing engine to find the LAST ! index before an end of line character.
+Note: this just covers up the error...
+really, we have a speed error in that our program is taking so long to run, that the hardware buffer is overflowing
+and shifting the line around such that we get the extra ! in the middle.

@@ -1,0 +1,49 @@
+Parsing
+
+
+string mystring = "1234,34,26,6,1,0";
+string[] numbersAsStrings = mystring.Split(',');
+int[] numberAsInts = new int[numbersAsStrings.Length];
+for (int index = 0; index < numbersAsStrings.Length; index++)
+{
+    numberAsInts[index] = int.Parse(numbersAsStrings[index]);
+}
+
+
+
+or, using less processing power
+
+
+string mystring = "1234,34,26,6,1,205";
+
+            // An array list allows easy management of it items, especially when you 
+            // don't know their type or initial amount
+            ArrayList numList = new ArrayList();
+
+            // Assign a variable to store the sum for the current number
+            int currSum = 0;
+
+            // Run over each character in the string plus one extra for the tailing digit
+            // (there are a lot of ways of handling the last digit, I chose this one)
+            for (int i = 0; i < mystring.Length + 1; i++)
+            {
+                // Check that we didn't reached a comma (which means move to next number) OR
+                // that it isn't the last digit.
+                if (i != mystring.Length && mystring[i] != ',')
+                {
+                    // Multiply the current sum by ten to add the digit into it's right place.
+                    // (For the first digit of each number, this multiplication is useless)
+                    currSum *= 10;
+
+                    // Add the current digit - subtract 48 to convert the ASCII char to number
+                    currSum += (int)mystring[i] - 48;
+                }
+                else
+                {
+                    // We have reached a ',' or the last char - add the current sum
+                    numList.Add(currSum);
+
+                    // Reset the current sum to handle the next number
+                    currSum = 0;
+                }
+            }

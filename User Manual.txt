@@ -1,0 +1,55 @@
+gpsLed
+	On			- gpsSampleRecieved.PositionDOP_e2 == 0;
+	Blink(rate)	- gpsLed.Blink(gpsSampleReceived.PositionDOP_e2 / 10 + 300);
+	BlinkyBlink	- timeStamp is Stale.
+	Off			- DOP < 6000, and updating
+
+imuLed
+	On			- problem detected (as identified from Jeff's old R&D)  - NOT IMPLEMENTED
+	Blink(rate)	- 
+	BlinkyBlink	- //(comented out--blinkyBlink causing heart beat to lock up) north and level
+	Off			- all else's
+	
+deadLed
+	On			- Dead (will be turned on by the gottcha function of the AttNav - NOT IMPLEMENTED
+	Blink(rate)	-
+	BlinkyBlink	-
+	Off			-
+	
+killLed
+	On			- Killed
+	Blink(rate)	- metal detector
+	BlinkyBlink	- enemy stale	 - NOT IMPLEMENTED
+	Off			- something's messed up, it should always be blinking, just very slow.
+
+statusLed
+	On
+	Blink(rate) - heartbeat
+	BlinkyBlink	- //(commented out--blinkyBlink causing heart beat to stall)positionEnemy is Null, so CheckKillShot chokes.
+				- positionEnemy GPSTime == 0
+
+Examples of States as of March 20, 2012
+When the device is powered on, it will cycle through all Led's, then turn them all off.
+Imediately following this, the Led's will be representative of the above assignments.
+imuLed will BlinkyBlink 1-3 times which might lead the user to believe the device is pointing north.  However, this is because the imu outputs a 0 yaw angle while initializing.
+Once operating, here are some of the trickier states the device might be in and the Led outputs that coorelate:
+
+Had good gps solution, operating normally, imuLed not North&Level, then razorVenus Tx wire unplugged:
+killLed - slow blink
+deadLed - NotImplemented
+gpsLed	- blinkyblink
+imuLed	- Off;
+
+In the same situation, if the device was pointing north&level when the tx line was unplugged, the imuLed would continue to blinkyblink.  This is because when stale data is detected, to preserve logging ability, the entire attnav is preserved as last recieved, except positionDOP and gpsTimeInWeek.
+
+
+
+
+
+
+
+
+
+
+
+

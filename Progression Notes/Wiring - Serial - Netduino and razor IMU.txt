@@ -1,0 +1,21 @@
+Notes:
+
+venus gps
+default baud is 9600
+
+Netduino
+COM1 is pin0 = Rx, and pin1 = Tx
+COM2 is pin2 = Rx, and pin3 = Tx
+
+Jeff's FTDI Serial cable wire color convention:
+Tx = Orange
+Rx = Yellow
+
+
+Forward
+Go through the SerialPortHelper class and understand byte[] information.
+Access the second Netduino Serial Port
+parse the stream... that could take a while
+pick a piece of the stream, do math on it, and write it out the second serial port to the terminal.
+don't fuck it up, or take too long to do all that.
+

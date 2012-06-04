@@ -1,0 +1,9 @@
+DogFighter Future Ideas
+
+
+- Write Flight Data to SD card, upload to flight sim to "replay" flights.
+- Flight Test gear.  Include some basic interface, and enable pilots to do their own flight testing on equipment, airspeed cal's, altitude vefirication etc, anything you can do with a mag and gps.
+
+
+
+
