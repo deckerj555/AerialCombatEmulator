@@ -1,0 +1,16 @@
+20120605_Cartop_LowellsHouse
+
+DF1 setup:
+Code Loaded: rev108
+On a stack of chairs and cardboard boxes in the SouthEast corner of the house's porch, aimed at the spot on road 141 that is direct line of sight (curvy part of road with jersy barriers all over it).
+Connected to Lowell's laptop "BGL", which recorded PuTTy session output.
+
+DF2 setup:
+Code Loaded: rev108
+In Heidi the Honda on Jeff's lap, car windows open, connected to Lenny the Lenovo, also recording PuTTy session output.
+
+
+Notes:
+Radio's had intermittent link all the way past 1000m.
+Car windows being up vs down had significant impact on dropped packets.
+Mag calibration clearly needed.  Achieved Kills, but not when pointing directly at...mag had at least 40 degree problem. (we might have to go with non-metal airplane engines only.  GLIDER DF!!)

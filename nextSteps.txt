@@ -1,3 +1,5 @@
+[ ] Mag calibration has been bumped to top priority.
+
 Ah Fuck:
 [ ] We figure out the ToShootAzimuth based on lat long ecef blah blah.   Which means whatever angle we come up with will be TRUE...yet our ahrs gives us magnetic.  to ToShootAzimuth, and positionMe.Yaw_mrad are always gonna be fucked by the declination.  fix this in the calibration, (lining up what would be a kill shot and press the cal button.
 	-Note: We've made everything work in True, by adding a declination for now.  Calibration will have ot be added later.
