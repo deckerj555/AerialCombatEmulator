@@ -64,20 +64,13 @@ namespace DogFighter
             // Read in data with physicalSerialPort.Read()
             int bytesFromRadio = physicalSerialPort.Read(bigBuffer, tailIndex, bigBuffer.Length - tailIndex);
             tailIndex += bytesFromRadio;
-            
-            //Below we commended out parse, and then added the forloop, array.copy, and tailindex to print out the helloWorld Results 1JUN12 JPD & LTN
-            //parse();
-            for (int i = 0; i < tailIndex; i++)
-            {
-                forDebugPrintOut.TerminalPrintOut(bigBuffer[i].ToString() + " ");
-            }
-            Array.Copy(bigBuffer, tailIndex, bigBuffer, 0, tailIndex);
-            tailIndex = 0;
+            parse();
         }
 
         public void HelloWorld(byte[] helloWorld)
         {
             physicalSerialPort.Write(helloWorld, 0, helloWorld.Length);
+
         }
 
         public void InsertTestBuffer(byte[] testBuffer)

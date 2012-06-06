@@ -63,46 +63,36 @@ namespace DogFighter
 
             // Call Testing here, after all wiring has been completed.
             //Testing();
+			
+			
+            gpsTimeLast_csec = 0;
+            gpsTimeNew_csec = 0;
+            for (; ; )
+            {
+                gpsTimeNew_csec = positionComputer.Compute(gpsTimeLast_csec);
+                Thread.Sleep(100); //main loop clock at 50Hz (firing solution to be feed at 50hz) // LTN: March 6, changed to 20hz instead of 50...no real good justification here, so feel free to change back if desired  LTN: March 11, changed to 10 hz.
 
-            //Calling xbee.HelloWorld, after commenting out the forloop below this.  This is being used to test the radios, and we should probably roll back after this LTN 6-1-2012
-            Thread.Sleep(4000);
-            statusLed.On();
-            byte[] helloWorld = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
-            xbee.HelloWorld(helloWorld);
+                // We're doing this check twice..once here, and once in PositionComputer where we decide whether or not to zero out the gpsTime and dop.  Instead of storing the gpsTimeLast and TimeNew in Mane.  Store them in the instance of PositionComputer that we've created, and do the check only once, in that location.  Then don't even bother turning on gpsLed from that location, just create an AttNav that' flagged as stale.  Downstream in firingSolution, do the AttNav stale data check first, and turn the Led on from there.  It's where you're going to have to do an EnemyStale check anyway.
+                if (gpsTimeLast_csec < gpsTimeNew_csec)
+                {
+                    gpsTimeLast_csec = gpsTimeNew_csec;
+                }
+                else
+                {
+                    gpsLed.BlinkyBlink();
+                    gpsTimeLast_csec = gpsTimeNew_csec;
+                }
 
-            xbee.TerminalPrintOut2("HelloWorld");
-            statusLed.Blink(500);
-      
-            //JPD and LTN 6-1-2012
-            // Commenting out the for loop to use this code as a HelloWorld to test the radios.
-            //gpsTimeLast_csec = 0;
-            //gpsTimeNew_csec = 0;
-            //for (; ; )
-            //{
-            //    gpsTimeNew_csec = positionComputer.Compute(gpsTimeLast_csec);
-            //    Thread.Sleep(100); //main loop clock at 50Hz (firing solution to be feed at 50hz) // LTN: March 6, changed to 20hz instead of 50...no real good justification here, so feel free to change back if desired  LTN: March 11, changed to 10 hz.
-
-            //    // We're doing this check twice..once here, and once in PositionComputer where we decide whether or not to zero out the gpsTime and dop.  Instead of storing the gpsTimeLast and TimeNew in Mane.  Store them in the instance of PositionComputer that we've created, and do the check only once, in that location.  Then don't even bother turning on gpsLed from that location, just create an AttNav that' flagged as stale.  Downstream in firingSolution, do the AttNav stale data check first, and turn the Led on from there.  It's where you're going to have to do an EnemyStale check anyway.
-            //    if (gpsTimeLast_csec < gpsTimeNew_csec)
-            //    {
-            //        gpsTimeLast_csec = gpsTimeNew_csec;
-            //    }
-            //    else
-            //    {
-            //        gpsLed.BlinkyBlink();
-            //        gpsTimeLast_csec = gpsTimeNew_csec;
-            //    }
-
-            //    // StatusLed Flashes to confirm Loop is still running.
-            //    if (statusLed.CurrentState == Led.State.Off)
-            //    {
-            //        statusLed.On();
-            //    }
-            //    else
-            //    {
-            //        statusLed.Off();
-            //    }
-            //}
+                // StatusLed Flashes to confirm Loop is still running.
+                if (statusLed.CurrentState == Led.State.Off)
+                {
+                    statusLed.On();
+                }
+                else
+                {
+                    statusLed.Off();
+                }
+            }
         }
 
         void xbee_ReceivedDLCMe(DeadLedControl dlcToMe)
