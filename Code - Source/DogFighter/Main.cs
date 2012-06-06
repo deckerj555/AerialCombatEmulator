@@ -97,7 +97,10 @@ namespace DogFighter
 
         void xbee_ReceivedDLCMe(DeadLedControl dlcToMe)
         {
-            razorVenus.TerminalPrintOut("\n\rDLC: " + dlcToMe.ControllingInt);
+            if (dlcToMe.ControllingInt == 1)
+            {
+                razorVenus.TerminalPrintOut("\n\r*\n\r*\n\r*\n\r*\n\r*\n\r*\n\r*\n\r*\n\r*\n\r*I JUST DIED\n\r*I JUST DIED\n\r*I JUST DIED\n\r*I JUST DIED\n\r*I JUST DIED");
+            }
         }
 
         public void Testing()

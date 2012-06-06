@@ -40,11 +40,14 @@ namespace DogFighter
 
         void xbee_ReceivedAttNavEnemy(AttNav shitIn)
         {
-            forDebugPrint.TerminalPrintOut("\r\nHere we are in xbee_ReceivedAttNavEnemy mutherfucker.");
+            //forDebugPrint.TerminalPrintOut("\r\nHere we are in xbee_ReceivedAttNavEnemy mutherfucker.");
             lock (enemyLocker)
             {
                 positionEnemyReceived = shitIn;
             }
+
+            forDebugPrint.TerminalPrintOut("\r\n\t\t\t\t\t\t\t\t\t\t\t\tDOP: " + positionEnemyReceived.PositionDOP_e2 + " Time: " + positionEnemyReceived.GPSTimeInWeek_csec);
+
         } // Assigning positionEnemyReceived
 
         // Insert trigger event handler, that changes a trigger variable true or false on both edges of trigger.
@@ -54,7 +57,7 @@ namespace DogFighter
             lock (meLocker)
             {
                 positionMeReceived = shitIn;
-                forDebugPrint.TerminalPrintOut("\n\rDOP: " + positionMeReceived.PositionDOP_e2 + "  Time: " + positionMeReceived.GPSTimeInWeek_csec + "  Yaw: " + positionMeReceived.Yaw_mrad + "  Pitch: " + positionMeReceived.Pitch_mrad);
+                forDebugPrint.TerminalPrintOut("\n\rDOP: " + positionMeReceived.PositionDOP_e2 + "  Time: " + positionMeReceived.GPSTimeInWeek_csec + " Y: " + positionMeReceived.Yaw_mrad + " P: " + positionMeReceived.Pitch_mrad);
             } // Now this event handler, which is running on clocked cycle, has an uptodate positionMe
 
             checkKillShot();
@@ -99,8 +102,8 @@ namespace DogFighter
             double north_m = -exMath.Cos(longitudeMe_rad) * exMath.Cos(latitudeMe_rad) * delta_ECEF_X_cm / 100 - exMath.Sin(latitudeMe_rad) * exMath.Sin(longitudeMe_rad) * delta_ECEF_Y_cm / 100 + exMath.Cos(latitudeMe_rad) * delta_ECEF_Z_cm / 100;
             double up_m = exMath.Cos(latitudeMe_rad) * exMath.Cos(longitudeMe_rad) * delta_ECEF_X_cm / 100 + exMath.Cos(latitudeMe_rad) * exMath.Sin(longitudeMe_rad) * delta_ECEF_Y_cm / 100 + exMath.Sin(latitudeMe_rad) * delta_ECEF_Z_cm / 100;
 
-            //distance = sqrt(dx^2 + dy^2 + dz^2)
-            double distance = System.Math.Pow(System.Math.Pow(east_m, 2) + System.Math.Pow(north_m, 2) + System.Math.Pow(up_m, 2), 0.5);
+            //distance_m = sqrt(dx^2 + dy^2 + dz^2)
+            double distance_m = System.Math.Pow(System.Math.Pow(east_m, 2) + System.Math.Pow(north_m, 2) + System.Math.Pow(up_m, 2), 0.5);
 
             double toShootAzimuthOffset_rad;  // offset converts traditional polar math to compass heading.  See jeff's notebook drawings 3 Feb.
             north_m = north_m + 1.1; //for debug only: add a smidge to north_m so you're not dividing by zero
@@ -117,13 +120,13 @@ namespace DogFighter
                 toShootAzimuthOffset_rad = 999;
 
             toShootAzimuth_rad = toShootAzimuth_rad + toShootAzimuthOffset_rad;
-            forDebugPrint.TerminalPrintOut("\n\rToShootAzimuth_rad: " + toShootAzimuth_rad);
+            forDebugPrint.TerminalPrintOut("\n\r\t\t\t\t\t\tTSA: " + toShootAzimuth_rad + "rng: " + distance_m);
 
             double denominator = System.Math.Pow((System.Math.Pow(east_m, 2) + System.Math.Pow(north_m, 2)), 0.5);
             double toShootElevationAngle_rad = exMath.Atan(up_m / denominator);
 
             //this is a tolernace to be used when comparing caclulated angles for killshot. 
-            double deadbandTolerance_mrad = 50; // 50mrad = ~2.5deg
+            double deadbandTolerance_mrad = 175; // 50mrad = ~2.5deg   //349mrad = ~20deg
 
             // Metal Detector Magic!!!!! (like finding a gold coin on the beach)
             double maxOfAzimuths = exMath.Max(toShootAzimuth_rad*1000, positionMe.Yaw_mrad);
@@ -132,9 +135,13 @@ namespace DogFighter
             double elevationDelta_mrad = toShootElevationAngle_rad * 1000 - positionMe.Pitch_mrad;
             double magnitudeOfDeltas_mrad = System.Math.Pow(azimuthDelta_mrad * azimuthDelta_mrad + elevationDelta_mrad * elevationDelta_mrad, 0.5);
 
+            
+
             if (magnitudeOfDeltas_mrad < deadbandTolerance_mrad)
             {
                 killLed.On();
+                forDebugPrint.TerminalPrintOut("\n\r$\n\r$\n\r$\n\r$\n\r$I be KILLIN a MotherFucker NOW\n\r$\n\r$\n\r$\n\r$");
+                
                 DeadLedControl dlcToEnemy = new DeadLedControl(1);
 
                 if (this.DLCCreated != null)
