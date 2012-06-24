@@ -1,4 +1,8 @@
-17 March 2012 - jpd - radio shack 			- 3.00
+13 June  2012 - jpd - radshack, switches    - 14.56
+10 June  2012 - jpd - ace hardware          -  3.57         
+08 June  2012 - jpd - sparkfun xBee         -  0.00 (54.95)
+07 June  2012 - jpd - radio shack protobrd  - 13.55
+17 March 2012 - jpd - radio shack 			-  3.00
 05 March 2012 - jpd - pololu 				- 69.74
 03 March 2012 - jpd - sparkfun 				- 53.59
 24 Febru 2012 - ltn	- sparkfun venus		- 53.59
