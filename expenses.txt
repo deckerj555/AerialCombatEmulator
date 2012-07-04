@@ -1,3 +1,4 @@
+01 July  2012 - jpd - ace hardware          -  2.84
 13 June  2012 - jpd - radshack, switches    - 14.56
 10 June  2012 - jpd - ace hardware          -  3.57         
 08 June  2012 - jpd - sparkfun xBee         -  0.00 (54.95)

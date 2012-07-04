@@ -51,7 +51,9 @@ Documentation:
    
 Purchasing:
 [ ] Male Breakaway headers
-[ ]  LEDs
+[ ] Suuuuper bright LEDs
+[ ] antenna http://www.sparkfun.com/products/9143
+[ ] hook up wire in various colors
    
    
    
