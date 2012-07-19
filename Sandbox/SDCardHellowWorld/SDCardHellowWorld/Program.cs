@@ -17,13 +17,21 @@ namespace SDCardHellowWorld
             {
                 StorageDevice.MountSD("SD", SPI.SPI_module.SPI1, Pins.GPIO_PIN_D10);
 
-                FileStream filestream = new FileStream(@"\SD\DeckerKicksNetduinoAss.txt", FileMode.Create);
+                FileStream filestream = new FileStream(@"\SD\DeckerKicksNetduinoAss.txt", FileMode.Append);
                 StreamWriter streamWriter = new StreamWriter(filestream);
-                streamWriter.WriteLine("SD card loggin, Muthafucko!");
+
+                for (int i = 0; i < 11; i++)
+                {
+
+                    streamWriter.Write("Here's a line muthafucko: ");
+                    streamWriter.WriteLine(i);
+                }
+
                 streamWriter.Close();
                 filestream.Close();
                 StorageDevice.Unmount("SD");
                 Debug.Print("all done!");
+
             }
 
             catch (Exception ex)
