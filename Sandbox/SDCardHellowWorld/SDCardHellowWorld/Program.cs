@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Diagnostics;
 using System.Threading;
 using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
@@ -11,8 +12,13 @@ namespace SDCardHellowWorld
 {
     public class Program
     {
+
         public static void Main()
         {
+
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
+            
             try
             {
                 StorageDevice.MountSD("SD", SPI.SPI_module.SPI1, Pins.GPIO_PIN_D10);
@@ -20,17 +26,25 @@ namespace SDCardHellowWorld
                 FileStream filestream = new FileStream(@"\SD\DeckerKicksNetduinoAss.txt", FileMode.Append);
                 StreamWriter streamWriter = new StreamWriter(filestream);
 
-                for (int i = 0; i < 11; i++)
+
+                for (int i = 0; i < 1000; i++)
                 {
 
                     streamWriter.Write("Here's a line muthafucko: ");
-                    streamWriter.WriteLine(i);
+                    streamWriter.Write(i);
+                    streamWriter.WriteLine("\t" + stopwatch.ElapsedMilliseconds.ToString());
+
+                    if (i % 100 == 0)
+                    {
+                        Debug.Print(i.ToString());
+                    }
                 }
 
                 streamWriter.Close();
                 filestream.Close();
                 StorageDevice.Unmount("SD");
-                Debug.Print("all done!");
+                Debug.Print("================all done!======================");
+
 
             }
 
