@@ -1,8 +1,13 @@
+imuLed = Green
+gpsLed = Yellow
+deadLed = Red
+killLed = White
+
 gpsLed
-	On			- gpsSampleRecieved.PositionDOP_e2 == 0;
-	Blink(rate)	- gpsLed.Blink(gpsSampleReceived.PositionDOP_e2 / 10 + 300);
-	BlinkyBlink	- timeStamp is Stale.
-	Off			- DOP < 6000, and updating
+	On			- DOP>20000
+	Blink(rate)	- 6000<DOP<20000.  200000 => blinkrate 30msec and 6000=> blinkrate 3000msec
+	BlinkyBlink	- DOP == 0, or never had a solution at all.
+	Off			- 0<DOP<-6000
 
 imuLed
 	On			- problem detected (as identified from Jeff's old R&D)  - NOT IMPLEMENTED
