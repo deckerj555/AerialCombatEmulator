@@ -37,6 +37,8 @@ namespace SDCardHelloWorld
 
                 for (short i = 0; i < 1000; i++)
                 {
+                    //Thread.Sleep(100);  //maybe the garbage collector cleans the filestream?
+
                     //streamWriter.WriteLine(intToWrite);     // int =  8878ms/1k-line
                     //streamWriter.WriteLine(longToWrite);  // long  = 9753ms/1k-line, 9982ms/1k-line
                     //streamWriter.WriteLine("string data");  // string "some data" = ~1407/1k-line;
@@ -52,7 +54,8 @@ namespace SDCardHelloWorld
                     //    Debug.Print(i.ToString());
                     //}
                 }
-                logger.Close();
+
+                //logger.Close();
 
                 Debug.Print(stopwatch.ElapsedMilliseconds.ToString());
                 Debug.Print("================all done!======================");

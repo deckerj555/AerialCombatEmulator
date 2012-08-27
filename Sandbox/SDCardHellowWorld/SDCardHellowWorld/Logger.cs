@@ -20,7 +20,7 @@ namespace SDCardHelloWorld
         public Logger()
         {
             StorageDevice.MountSD("SD", SPI.SPI_module.SPI1, Pins.GPIO_PIN_D10);
-            filestream = new FileStream(@"\SD\DeckerKicksNetduinoAss.txt", FileMode.Append);
+            filestream = new FileStream(@"\SD\DeckerKicksNetduinoAss.txt", FileMode.Append, FileAccess.Write, FileShare.None, 4096);
         }
 
         public void Initialize()
@@ -37,12 +37,18 @@ namespace SDCardHelloWorld
             //StreamWriter streamWriter = new StreamWriter(filestream);
             //long longToWrite = 12345678;
             //int intToWrite = 1234567;
-            //byte[] byteArraryToWrite = { 0x68, 0x65, 0x79, 0x20, 0x66, 0x75, 0x63, 0x6b, 0x20, 0x79, 0x6f, 0x75, 0x2c, 0x20, 0x79, 0x6f, 0x75, 0x20, 0x66, 0x75, 0x63, 0x6b, 0x69, 0x6e, 0x67, 0x20, 0x66, 0x75, 0x63, 0x6b, 0x21 };
-            byte byteToWrite = 0x68;
+            byte[] byteArraryToWrite = { 0x68, 0x65, 0x79, 0x20, 0x66, 0x75, 0x63, 0x6b, 0x20, 0x79, 0x6f, 0x75, 0x2c, 0x20, 0x79, 0x6f, 0x75, 0x20, 0x66, 0x75, 0x63, 0x6b, 0x69, 0x6e, 0x67, 0x20, 0x66, 0x75, 0x63, 0x6b, 0x21, 0x68, 0x65, 0x79, 0x20, 0x66, 0x75, 0x63, 0x6b, 0x20, 0x79, 0x6f, 0x75, 0x2c, 0x20, 0x79, 0x6f, 0x75, 0x20, 0x66, 0x75, 0x63, 0x6b, 0x69, 0x6e, 0x67, 0x20, 0x66, 0x75, 0x63, 0x6b, 0x21 };
+            byte byteToWrite = 0x69;
 
             //streamWriter.WriteLine("\t" + stopwatch.ElapsedMilliseconds.ToString()); // this combined line is 2519ms/1k-line, 2274ms/1k-line
             //filestream.Write(byteArraryToWrite, 0, byteArraryToWrite.Length); //byte[] = 1776ms/1k-line
             filestream.WriteByte(byteToWrite);  //byte = 804ms/1k-line
+            filestream.Flush();
+            
+            //using (StreamWriter sw = new StreamWriter(filestream))
+            //{
+            //    sw.WriteLine("well heeeeeeello!");
+            //}
             
         }
 
