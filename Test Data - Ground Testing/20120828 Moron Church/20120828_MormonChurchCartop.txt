@@ -1,0 +1,56 @@
+20120828_MormonChurchCatop
+
+First test of prototyped hardware serial numbers DF001 and DF002.  Code Rev 127 on each.  DF002 in Jeff's (well, let's be honest--Anna's) Acura, and DF001 in Lowell's Civic.  Both DFs on placed in the middle of the respective dashboards.  Had a hard time acquiring GPS DOPs less than 20000 (as printed out in terminal).  Most of the test was done with DOPs of 30000 or greater.  Jeff saw 9000 only briefly; Lowell was ~50000 (might DF001 have a GPS  DOP problem?)  A jpg of the DF prototype units as test (but not as installed) accompany this summary.
+
+MagCal seemed to work reasonably well.  after hitting the onboard button seven times, a magcal would execute, resulting in immediate kill shots.  Both DF's would acknowledge the kill shot.
+
+There seemed to be some inconsistentcies getting kill shots after re-orienting the vehicles.  for intstance:
+
+- DF001 in car1 and DF002 in car2.  
+- car1 and car2 pointed at each other
+- car1 drives in a small circle, a complete 360.  The car headings (both 1 and 2) did not always correlate with the killshots.  the killshot would happen when the car1 was no pointed at car2 and when car1 was pointed at car2 killshots would not always happen.
+- the cars were 60m to 90m apart (measured in google maps)
+
+The suppisition is the magnitude of the GPS uncertainties is as big as the distance between the GPS units, resulting in the target moving unrealistically.  We guessing (hoping?) the problem lie not in the magnetometer, but in the realative magnitude between uncertiainites and proximity.  so we need to either get better GPS units (nope.) or make the distance between the units greater.  
+
+Next test should incorporate larger distances between the DF's.  Bingen Point to Pine Factory, or water tower to North Bay, etc.
+
+From Lowell:  (https://mail.google.com/mail/u/0/#inbox/139712a5bf567cb5)
+
+
+CarTop Testing tonight Aug 28th 2012
+
+Physical Configuration:
+In Mormon church parking lot.
+DF001 in Lowell's Honda, sitting on dashboard above radio, powered by Lenny via USB, connected to Lenny via Netduino USB and serial FTDI cable.
+DF002 in Jeff's car, same general setup.
+
+Software:
+rev 127
+
+Testing Chronology:
+Sat in cars with DF's on dashboards waiting for good GPS.  DF002 had DOP's down in the 10,000's sometimes, but was often closer to 38,000.
+DF001 never got below 50,000 for any extended period of time.
+Range between the DF"s was reported via forDebugPrint.terminalPrintOut().  It varied from several hundred meters, to 50 meters while the cars were sitting right next to each other.
+Despite the poor GPS solutions, we went forward just to see what would happen.
+Parked cars at opposite ends of parkinglot, facing head on, and perfomed a magCal on both DF units (haha units) by pressing onboard switch 7 times in less than 4 seconds.
+MagCal seemed to work, because immediately after, we were killing eachother without moving the vehicles, as expected.
+Drove around, testing to see a Killin a mother message when we were again pointed at the opposite car.
+
+Results
+"Drove around, testing to see a Killin... when again pointed at opposite car"
+This was met with mixed results.  Several times, both DF's were successful in killing the target when actually pointed at the target.
+However, there were also several occasions where the kill message was seen when the car was pointed > 90deg off from the target.
+The leading theory/hope is that the poor DOP, and close proximity of the vehicles in one parking lot, resulted in the bad kill messages.
+
+Conclusions
+Sometimes it seems to work, sometimes not, and sometimes it "wrongfully kills".
+Current theory is that it actually works pretty well, but the GPS solution is jumping around enough that this test cannot be definitive.  Several of the times when we didn't get the kill message we wanted, it could have been that the GPS altitude was off, and we needed an elevation adjustment.
+Also, we're betting on the "wrongful kills" being GPS jumping around to the other locations.
+
+Recommendations
+1) Test again in a larger space, where we can have more confidence that we are outside each other's GPS uncertainties.
+2) Ground Planes for the GPS units.  Testing cannot be considered valid unless we can solve the problem of getting a reasonable GPS solution.
+    a) verify good GPS solutions can be acquired on a dashboard, despite metal etc.  Ground plane help this?
+    b) if yes, then add ground planes to the DF units.
+3) Look at logs and verify our theory about the GPS solution jumping around.  If it is correct, we should see it moving all over and outside the mormon parkinglot in a google earth plot.
