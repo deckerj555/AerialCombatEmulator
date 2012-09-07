@@ -1,0 +1,29 @@
+Test Setup--
+
+- slightly modified rev130 only modifications were to the logging file structure (included a header and excluded the label on each quantity logged to make it look more like a generic tab delimited data file)
+- Jeff at the Bingen water tower in the pink truck; truck facing down hill, DF001 on the driver's window sill
+- Danny at Bingen point with DF002; see Chronology for changes in set up while troubleshooting
+
+Test Objective:
+Gather data with relatively distance DF units as compared to the GPS uncertainities.
+
+Results:
+Danny's DF never got GPS lock.
+
+Conculsions:
+The Venus board had come *slightly* unseated from the headers on the DF perf board.
+
+Chronology:
+Jeff parked and set up DF001 facing North Bay, and got GPS lock very quickly (~1min).  The debug output was being monitored on DF001 with a laptop; the DF was powered via USB.
+
+Danny was first parked facing the water tower in the northern parking lot, DF on the hood of his SUV, no laptop, powered via the D-cell battery pack.  After several (~7) muinutes of no GPS lock, Danny switched to powering DF002 with his laptop and USB.  Another seemingly long ass time (~5min?) without lock, Danny moved his vehicle to 45.707277, -121.459672 (the google marker is a little off--Danny was at the intersection were that useless stop is) to ensure he had an unobstructed view of the entire sky.  The power source is unknown at this location.  After another ~5min, and still no lock the test was ended. 
+
+For clarity, during the test:
+- DF001 was recieving attnav reports from Danny's DF002, and DF002's GPS was indeed incrementing.  The radio link would predictably break and then come back according to line of sight interreuptions.
+- The serial line switch on DF002 was in the aft position (and was toggled a few times for shits 'n giggles)
+- The red LED on the venus board was lit the entire time, but never blinked.
+- The GPS antenna on DF002 at this time is not secrued to the perf board.  The antenna also still has a ground wire soldered to it.  During the test the antenna was positioned appropriated and the ground wire was contacting metal whenever possible.
+
+After the test, Jeff powered DF002 with the D-cell pack and let it sit on the dash of the Pink Truck for ~20min and still had no GPS lock. Then while checking all the connections, it was noted the Venus GPS board was just ever so slightly (~1/16") raised up.  After pushing the board back down, GPS lock was recieved within ~2min.
+
+
