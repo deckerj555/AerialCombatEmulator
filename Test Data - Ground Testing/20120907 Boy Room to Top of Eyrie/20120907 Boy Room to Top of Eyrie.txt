@@ -1,0 +1,17 @@
+Test Setup:
+- rev132 on both
+- DF001 on the Acura dashboard on the way up Eyrie, on the top of the car via the open sunroof on the way back down
+- DF002 on the window sill of the boy room, switch normal to window sill, SD card facing in room.
+
+Test Objective:
+Redo the 07Sept12 Water Tower test.  That is, verify (well, ok...convince ourselves the GPS uncertainties were the reason the Mormon Church test yeilded inconstent results.
+
+Results:
+Haven't looked through the data yet, but it appeared killshots were registered at the appropriate orientations.  However only limited orienitations were tried.  The car was stopped twice coming back down Eyrie Rd to play with the kill shot.  Orientations of +/-90deg and return to the proper toShootAzimuth did inDeed yeild positive "I BE KILLIN A MUTHAFUCKA NOW."  But the Mormon Church test was much more extensive.
+
+Conculsions:
+Initial look indicates GPS uncertainties (or at least the GPS coordinate "bounce") is responisble for the poor killshot performance at the Mormon Church.
+
+Chronology:
+DF002 was set up in the both room and allowed to get GPS lock.  Power was via D-cell pack.  DF001 was used in the boy room to verifiy the DF's serial debug output, and verify the DFs had good comm.  DF001 was relocated to the Acura and restarted and checked comm again via the serial debug output.  The Acura was then drive up Eyrie Rd to the gravel lot at the intersection of Jewett and Eyrie.  Comm with DF002 was sporadic up the road and was lost completely north of Cherry Blossom Ln.  At the gravel lot, the DF was repositioned and place on the top of the car via the open sunroof in an attempt to get comm earlier.  Reliable comm was restablished just south of Cherry Blossom.  Here the car was stopped a yaw was excited.  Then a magCal was done.  immediately a killshot was verified with a IBKAMFN message.  Yaw was swept +/-90 a few times and pitch was excited.  The IBKMFN messages were approximately correct (it was dark, after all).  The was move a few tens of meters south and the process repeated (yaw excited, pitch excited, magCal, yaw sweep, pitch excited).
+

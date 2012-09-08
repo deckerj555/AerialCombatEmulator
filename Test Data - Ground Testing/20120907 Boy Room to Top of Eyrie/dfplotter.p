@@ -5,7 +5,7 @@
       unset label                            # remove any previous labels
       set xtic auto                          # set xtics automatically
       set ytic auto                          # set ytics automatically
-      set title "DF Logs 05SEP12 - Water Tower"
+      set title "DF Logs 07SEP12 - Boy Room"
       set xlabel "Longitude (deg)"
       set ylabel "Latitude (deg)"
      #set key 0.01,100
@@ -13,10 +13,11 @@
      #set arrow from 0.0028,250 to 0.003,280
      #set xr [0.0:0.022]
      #set yr [0:325]
-set term x11 0
- plot    "20120905 DF001.txt" using ($3/10000000):($2/10000000) title 'Location' with points pt 6;
- set term x11 1
-    set xlabel "GPS Time (sec)"
-      set ylabel "Position Dilution of Precsion (-)"
-plot    "20120905 DF001.txt" using ($2/100):($4) title 'PDOP' with points pt 6;
+#set term x11 0
+plot    "DF001 Car.txt" using ($3/10000000):($2/10000000) title 'Car' with points, \
+ "DF001 Car.txt" u ($12/10000000):($11/10000000) t 'Base' w points pt 6
+# set term x11 1
+#  set xlabel "GPS Time (sec)"
+#      set ylabel "Position Dilution of Precsion (-)"
+# plot    "20120905 DF001.txt" using ($2/100):($4) title 'PDOP' with points pt 6;
  
