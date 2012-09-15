@@ -1,0 +1,30 @@
+Test Setup:
+- rev132 on both, with minor mods to log DLCs
+- DF001 on the Acura dashboard 
+- DF002 on the balcony rail of Jeff's master bedroom
+
+Test Objective:
+Gather more data that has a GPS distance much greater than the GPS uncertainties.
+
+Results:
+Haven't looks at the data at all yet.
+
+Conculsions:
+Initial look indicates GPS uncertainties (or at least the GPS coordinate "bounce") is responisble for the poor killshot performance at the Mormon Church.
+
+Chronology:
+- DF002 has been having trouble get a GPS soluntion; this the third time I've wanted to test and DF002's GPS module has required an excessive amount to time to get a solution.  DF002 was outside on the handrail for quite a while (~15min) before getting solution (actual time in logs) powered by D-cell pack.  
+- DF001 was put on the dash of the Acura (switch forward, USB and FTDI aft) and driven to the end of Eyrie.
+- Turned around so the car (and thus the DF) was pointed at the house
+- phsycially aimed the DF001 at DF002 (no killshot registered)
+- DF001 rotated in yaw 90deg CCW, then straight ahead (at DF002), then 90 CW
+- repeated: 90deg CCW, 0deg, 90 CW
+- magCal
+- moved the car for traffic leaving Eyrie Court
+- played with DF orientation trying to get a killshot; no joy
+- magCal
+- played with DF orientation trying to get a killshot; still no joy
+- magCal for the 3rd time--still no killshot
+- drive back to garage
+- sat in garage for a few minutes, amazed the GPS module still had a solution
+
