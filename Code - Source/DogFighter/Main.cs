@@ -13,12 +13,10 @@ namespace DogFighter
     {
         // Declarations
         Led statusLed = new Led(Pins.ONBOARD_LED);
-        Led imuLed = new Led(Pins.GPIO_PIN_D7);
-        Led gpsLed = new Led(Pins.GPIO_PIN_D6);   
-        Led deadLed = new Led(Pins.GPIO_PIN_D5);
-        Led killLed = new Led(Pins.GPIO_PIN_D4);   
-        int gpsTimeLast_csec;
-        int gpsTimeNew_csec;
+        Led imuLed = new Led(Pins.GPIO_PIN_D7);   // green
+        Led gpsLed = new Led(Pins.GPIO_PIN_D6);   // yellow
+        Led deadLed = new Led(Pins.GPIO_PIN_D5);  // red
+        Led killLed = new Led(Pins.GPIO_PIN_D4);  // white super-bright 
 
         GPSIMU razorVenus = new GPSIMU();
         PositionComputer positionComputer = new PositionComputer();
@@ -28,15 +26,11 @@ namespace DogFighter
 
         public void Run()
         {
-            Thread.Sleep(50); // TODO: We think this should be deleted.  Lowell wants to leave it until the DLC problem is solved.  THEN! we shall blow it away.
-
-            // Wire up all of the classes to eachother as necessary
+            #region Wire up all Classes
             positionComputer.Initialize(razorVenus, imuLed, gpsLed);
             xbee.Initialize(positionComputer, firingSolution, deadLed, razorVenus);
-            firingSolution.Initialize(positionComputer, xbee, trigger, killLed, statusLed, razorVenus);
-
-            // Button is commented out because we're currently using ONBOARD_SW1 for the trigger
-            // Button mainButton = new Button(Pins.ONBOARD_SW1, statusLed);
+            firingSolution.Initialize(positionComputer, xbee, trigger, killLed, statusLed, razorVenus, gpsLed);
+            #endregion
 
             #region System Ready Blinks
             statusLed.On();
@@ -55,6 +49,7 @@ namespace DogFighter
             deadLed.Off();
             killLed.Off();
             #endregion
+
             string lineToPrint = "\n\rSystem Wired and Ready for Action\n\r\n\r";
             razorVenus.TerminalPrintOut(lineToPrint);
 
@@ -63,25 +58,12 @@ namespace DogFighter
 
             // Call Testing here, after all wiring has been completed.
             //Testing();
-			
-			
-            gpsTimeLast_csec = 0;
-            gpsTimeNew_csec = 0;
+
+
             for (; ; )
             {
-                gpsTimeNew_csec = positionComputer.Compute(gpsTimeLast_csec);
-                Thread.Sleep(100); //main loop clock at 50Hz (firing solution to be feed at 50hz) // LTN: March 6, changed to 20hz instead of 50...no real good justification here, so feel free to change back if desired  LTN: March 11, changed to 10 hz.
-
-                // We're doing this check twice..once here, and once in PositionComputer where we decide whether or not to zero out the gpsTime and dop.  Instead of storing the gpsTimeLast and TimeNew in Mane.  Store them in the instance of PositionComputer that we've created, and do the check only once, in that location.  Then don't even bother turning on gpsLed from that location, just create an AttNav that' flagged as stale.  Downstream in firingSolution, do the AttNav stale data check first, and turn the Led on from there.  It's where you're going to have to do an EnemyStale check anyway.
-                if (gpsTimeLast_csec < gpsTimeNew_csec)
-                {
-                    gpsTimeLast_csec = gpsTimeNew_csec;
-                }
-                else
-                {
-                    gpsLed.BlinkyBlink();
-                    gpsTimeLast_csec = gpsTimeNew_csec;
-                }
+                positionComputer.Compute();
+                Thread.Sleep(100); // Main loop clock cycle Timer
 
                 // StatusLed Flashes to confirm Loop is still running.
                 if (statusLed.CurrentState == Led.State.Off)
@@ -95,6 +77,7 @@ namespace DogFighter
             }
         }
 
+        // DLC received debug printout "I JUST DIED"
         void xbee_ReceivedDLCMe(DeadLedControl dlcToMe)
         {
             if (dlcToMe.ControllingInt == 1)
@@ -103,6 +86,7 @@ namespace DogFighter
             }
         }
 
+        #region Testing() - Insert a fake radio stream
         public void Testing()
         {
             AttNav tAttNav = new AttNav(-234847615, -379916876, 453814132, 1600, 3100, 780, 456486502, -121722502, 150000, 1, 10000);
@@ -138,9 +122,10 @@ namespace DogFighter
             fakeRadioStream2[15] = 0x01;
 
             xbee.InsertTestBuffer(fakeRadioStream1);
-            Thread.Sleep(10); // TODO: DELETE THIS, AS SOON AS THE DLC PROBLEM IS FIXED.!!!
+            // Thread.Sleep(10); // shitty sleep 
             xbee.InsertTestBuffer(fakeRadioStream2);
         }
+        #endregion
 
         public void LedTester()
         {

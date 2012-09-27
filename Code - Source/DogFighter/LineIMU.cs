@@ -64,11 +64,11 @@ namespace DogFighter
                 return pitch_mrad;
             }
         }
-        public int Yaw_mrad_true
+        public int Yaw_mrad
         {
             get
             {
-                return yaw_mrad + 279; // about 16deg HARD CODED FOR LOCAL DECLINATION
+                return yaw_mrad; // No longer converting to true--this is taken care of in the firingSolution by initializing yawOffsetFromMagCal = 279;
             }
         }
 

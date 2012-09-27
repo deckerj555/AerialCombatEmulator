@@ -112,7 +112,7 @@ namespace DogFighter
 
         public void Blink(int rate_msec)
         {
-            this.blinkRate_msec = System.Math.Max(System.Math.Abs(rate_msec), 33); // Never need to blink faster than 30hz, cause you can't see that fast
+            this.blinkRate_msec = System.Math.Max(System.Math.Abs(rate_msec), 30); // Never need to blink faster than 30hz, cause you can't see that fast
 
             lock (currentStateLocker)
             {

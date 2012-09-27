@@ -168,11 +168,11 @@ namespace DogFighter
                         // Control the LED here, as the dlc comes in.  In future, can move this to firing solution if desired so that it runs on clockcycle.
                         if (dlcToMe.ControllingInt == 1)
                         {
-                            deadLed.On(); // We could make the DLC represent how far off a shot is, and then blink accordingly.  But for now, we'll just treat it like a bool - LTN 4/1/12
+                            //deadLed.On(); Update 02Sept2012.  Aaawh, geeez.  we're throwing a null exception here on deployment now. keyword: sanity // We could make the DLC represent how far off a shot is, and then blink accordingly.  But for now, we'll just treat it like a bool - LTN 4/1/12
                         }
                         else
                         {
-                            deadLed.Off();
+                            //deadLed.Off();  for some ungodly reason the code keeps breaking on a null reference here were i try to deploy.  i've been working on magCal and sevenTimesKeyed--haven't mucked about with DLCs anywhere.  haven't a clue why this is breaking.  commented out to save my sanity and continue debugging magCal.  JPD 28AUG2012
                         }
                     }
                 }

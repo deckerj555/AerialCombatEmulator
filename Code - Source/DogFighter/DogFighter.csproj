@@ -38,6 +38,7 @@
     <Compile Include="AttNav.cs" />
     <Compile Include="BitConverter.cs" />
     <Compile Include="Button.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="Timer.cs" />
     <Compile Include="DeadLedControl.cs" />
     <Compile Include="EnemyEmulator.cs" />
@@ -60,5 +61,7 @@
     <Reference Include="Microsoft.SPOT.Native" />
     <Reference Include="SecretLabs.NETMF.Hardware" />
     <Reference Include="SecretLabs.NETMF.Hardware.Netduino" />
+    <Reference Include="SecretLabs.NETMF.IO, Version=4.2.0.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="System.IO" />
   </ItemGroup>
 </Project>

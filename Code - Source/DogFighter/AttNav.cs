@@ -129,14 +129,14 @@ namespace DogFighter
         {
             get
             {
-                return pitch_mrad;
+                return pitch_mrad;  //0 = level, pi = straight up, -pi = straight down
             }
         }
         public int Yaw_mrad
         {
             get
             {
-                return yaw_mrad;
+                return yaw_mrad; // 0 or 2pi = north, pi = south
             }
         }
         public int Latitude_e7
