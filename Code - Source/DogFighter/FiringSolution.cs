@@ -25,6 +25,7 @@ namespace DogFighter
         private Trigger trigger;
 
         private UInt16 loggingCounter = 0;
+        private UInt16 magCalCounter = 0;
         private double toShootAzimuth_rad;
         private double yawOffsetFromMagCal_mrad = 0;
         private double yawWithMagCal_mrad;
@@ -218,7 +219,7 @@ namespace DogFighter
             {
                 loggingCounter = 0;
                 //logger.Initialize();
-                logger.Log(positionMe.GPSTimeInWeek_csec.ToString() + "\t" + positionMe.Latitude_e7.ToString() + "\t" + positionMe.Longitude_e7.ToString() + "\t" + positionMe.MSLAlt_cm.ToString() + "\t" + positionMe.PositionDOP_e2 + "\t" + toShootAzimuth_rad.ToString("F04") + "\t" + positionMe.Yaw_mrad.ToString() + "\t" + yawWithMagCal_mrad.ToString() + "\t" + toShootElevationAngle_rad.ToString("F04") + "\t" + positionMe.Pitch_mrad.ToString() + "\t" + distance_m.ToString("F04") + "\t" + positionEnemy.Latitude_e7.ToString() + "\t" + positionEnemy.Longitude_e7.ToString() + "\t" + positionEnemy.MSLAlt_cm.ToString() + "\t" + positionEnemy.PositionDOP_e2.ToString() + "\t" + dlcForLogging.ToString());
+                logger.Log(positionMe.GPSTimeInWeek_csec.ToString() + "\t" + positionMe.Latitude_e7.ToString() + "\t" + positionMe.Longitude_e7.ToString() + "\t" + positionMe.MSLAlt_cm.ToString() + "\t" + positionMe.PositionDOP_e2 + "\t" + toShootAzimuth_rad.ToString("F04") + "\t" + positionMe.Yaw_mrad.ToString() + "\t" + yawWithMagCal_mrad.ToString() + "\t" + toShootElevationAngle_rad.ToString("F04") + "\t" + positionMe.Pitch_mrad.ToString() + "\t" + distance_m.ToString("F04") + "\t" + positionEnemy.Latitude_e7.ToString() + "\t" + positionEnemy.Longitude_e7.ToString() + "\t" + positionEnemy.MSLAlt_cm.ToString() + "\t" + positionEnemy.PositionDOP_e2.ToString() + "\t" + dlcForLogging.ToString() + "\t" + magCalCounter.ToString());
                 //logger.Close();
                 logger.Flush();
 
@@ -243,6 +244,7 @@ namespace DogFighter
             else if (yawOffsetFromMagCal_mrad > 4712)
             {
                 yawOffsetFromMagCal_mrad = yawOffsetFromMagCal_mrad - (exMath.PI * 2 * 1000);
+                magCalCounter++;
             }
         }
 
