@@ -1,0 +1,68 @@
+
+
+Test Setup:
+- rev139 on both
+- setup DF's outside of car's if possible.
+- logging cards wipped prior to test
+
+ 
+Test Steps:
+[ ] identify line of sight locations, as far apart as reasonable on bingen point.
+	DF002 Location: Sitting on curb, outside NB, pointing away from NB building.
+	DF001 Location: 
+[x] Setup DF002
+	[x] Photograph
+		- nope... but it's setup on the curb, outside NB
+	[x] point to Iphone magnetic North
+		- nope... but iphone is super shitty... but it's lined up with the curb
+	[x] Power on
+		- Time ~20:40 local
+	[ ] connect in Putty and monitor
+		- Didn't bother with this - 
+	- GPS Solution ~21:10
+[ ] Setup DF001
+	[x] Photograph
+	[x] point to Iphone magnetic North
+		- nope, aligned right at DF002
+	[ ] Power on
+		~21:35
+		- power cycled 1 time because no lights came on.
+		- power cycled a second time... still no luck
+			-symptoms: - power light comes on... nothing else happens
+		- re-deployed code and everything seemed normal
+		- power cycled and device on and funcitoning ~21:39
+	[x] connect in Putty and monitor
+[ ] Verify radio connection
+	[ ] If no connection, move DF002 to new location with radio connection (leave powered on throughout this move)
+	- Had no radio connection sitting on the ground in front of water tower.
+		- picked up 3 feet, and acquired signal...
+		- DOP and Time zero'ed out... meaning attnav is stale
+		-** Moving to hood of car for continued testing.
+		- Powering off, moving to car, and powering on.
+		- Powering back on (sitting on trunk, pointed at DF002) at ~21:47
+		- Only have link with other DF, when Jeff is holding the antenna with his fingers.
+		
+[x] Point DF001 towards DF002
+[x] Mag Cal (button 7 times)
+	- Mag cal at  	TSA 3.3678 (last digit floating) - ~21:58
+[x] maintain heading towards DF001 after Mag Cal for 1 minute
+[x] rotate DF002 360deg CW (right turn), returning to original position of mag cal
+	- Right turn ~22:01
+[x] rotate DF002 360deg CCW (left turn), returing to original position of mag cal
+	- Left turn ~22:04
+[x] Moving by hand off trunk, holding as directly at NB as visually possible
+	- this is the third 360 turn.  it will be CW, and stop off the car, and pointed towards NB ~20:08 (translation and roation happening bitches)
+	- AFter moving to grass position, yaw showed ~2000mrad.  Then at ~22:10 we rotated CCW back onto the car trunk... and we be killin motherfuckers
+[x] rotate (while still on trunk) DF001 90deg off target alignment, and Mag cal (button 7 times)
+	- rotating CW, aligning with watertower road (pointing westish) ~22:12 magcal
+	- after mag cal (which we saw in putty) we didn't kill anyone.  possible pitch/yaw coupled rotation issue (because it initiallized not at level)
+	- ~22:14 - pitching down, while 90 Right of target to try and kill - and booya, killin a mother fucker., pitching down until reporting 67mrad (vs when sitting on binder reporting 167mrad)
+[x] drive back from watertower to northbay
+[x] power down at ~1028 	
+
+
+
+
+
+
+
