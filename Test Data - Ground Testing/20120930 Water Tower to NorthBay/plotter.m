@@ -5,7 +5,7 @@
 % CALLS: lla2ecef.m and ecef2neu.m are the only non-standard funcitons
 
 % TO DO:
-% [ ] see the nasty-gram below about making a new directory in the repo and adding that to Octave's path
+% [x] see the nasty-gram below about making a new directory in the repo and adding that to Octave's path
 % [ ] add a +/- line to the tSA based on the deadband tolerance; shoud be done like it is in the code--magnitudes of deltas, and not just +/- yaw & +/- pitch, becuase the height difference  between the DFs would confuse the kill calc'd online and offline.
 % [ ] make a sub-plot with the NEU data in the top and a yaw/yawWithMagCal/tsA time history in the bottom.  include a vertical line in the bottom plot that moves to indicate time progression
 % [ ] so far i've started with all the data for NEU and indicated when we have a DLC = 1.  Start from the opposite direction: start with DLC = 1 data and only plot the NEU data for those moments.
@@ -90,34 +90,39 @@ deadband_deg         = 175/1000*180/pi; %this data set was taken with rev 139;
 %hmmm...we're all fuck up here... we know yawWithMagCal_mrad doesn't wrap about 2pi properly. this flows down into the magnitudeOfDeltas.  how did we ever detect a kill?
 %lots of plots for debug
 maxOfAzimuths = max(tSA_rad * 1000, yawWithMagCal_mrad);
+minOfAzimuths = min(tSA_rad * 1000, yawWithMagCal_mrad);
+azimuthDelta_mrad = min((2*pi*1000 - maxOfAzimuths) + minOfAzimuths, maxOfAzimuths - minOfAzimuths);
+elevationDelta_mrad = tSE_rad*1000 - Pitch_mrad;
+magnitudeOfDeltas_mrad = sqrt(azimuthDelta_mrad.^2 + elevationDelta_mrad.^2);
+DLC_check_indices = find(magnitudeOfDeltas_mrad < deadband_deg/180*pi*1000);
+DLC_check = zeros(length(GPSTime_csec), 1);
+DLC_check(DLC_check_indices) = 1;
+
+
 figure;
 plot(maxOfAzimuths/1000*180/pi);
 title('maxOfAzimuths_deg');
 grid;
 %print -dpng maxOfAzimuths.png
 
-minOfAzimuths = min(tSA_rad * 1000, yawWithMagCal_mrad);
 figure;
 plot(minOfAzimuths/1000*180/pi)
 title('minOfAzimuths_deg')
 grid;
 %print -dpng minOfAzimuths.png
 
-azimuthDelta_mrad = min((2*pi*1000 - maxOfAzimuths) + minOfAzimuths, maxOfAzimuths - minOfAzimuths);
 figure;
 plot(azimuthDelta_mrad/1000*180/pi)
 title('azimuthDelta_deg')
 grid;
 %print -dpng azimuthDelta.png
 
-elevationDelta_mrad = tSE_rad*1000 - Pitch_mrad;
 figure;
 plot(elevationDelta_mrad/1000*180/pi)
 title('elevationDelta_deg')
 grid;
 %print -dpng elevationDelta.png
 
-magnitudeOfDeltas_mrad = sqrt(azimuthDelta_mrad.^2 + elevationDelta_mrad.^2);
 figure;
 plot(magnitudeOfDeltas_mrad/1000*180/pi)
 title('magnitudeOfDeltas_deg')
@@ -126,33 +131,28 @@ grid;
 
 figure
 hold on
-plot([1:1361], maxOfAzimuths/1000*180/pi, [1:1361], minOfAzimuths/1000*180/pi, [1:1361], azimuthDelta_mrad/1000*180/pi, [1:1361], magnitudeOfDeltas_mrad/1000*180/pi)
-plot([1,1361], [10,10], 'r', [1,1361], [-10,-10], 'r')
+plot([1:length(maxOfAzimuths)], maxOfAzimuths/1000*180/pi, [1:length(minOfAzimuths)], minOfAzimuths/1000*180/pi, [1:length(azimuthDelta_mrad)], azimuthDelta_mrad/1000*180/pi, [1:length(magnitudeOfDeltas_mrad)], magnitudeOfDeltas_mrad/1000*180/pi)
+plot(get(gca, 'xlim'), [deadband_deg, deadband_deg], 'r', get(gca, 'xlim'), [-deadband_deg, -deadband_deg], 'r')
 hold off
 grid
 legend('maxOfAzimuths', 'minOfAzimuths', 'azimuthDelta', 'magnitudeOfDeltas')
 ylabel('[deg]')
 xlabel('tick')
-title('Comparison of "Kill" Calculation Terms')
+title('Comparison of CheckKillShot Calculation Terms')
 %print -dfig ComparisonOfKillCalcTerms.fig
 
-%it's too lines lie right over top of each other
+%it's two lines lie right over top of each other
 figure
 hold on
-plot([1:1361], maxOfAzimuths/1000*180/pi, [1:1361], minOfAzimuths/1000*180/pi, [1:1361], azimuthDelta_mrad/1000*180/pi, [1:1361], magnitudeOfDeltas_mrad/1000*180/pi, [1:1361], yawWithMagCal_mrad/1000*180/pi, '-.' )
-plot([1,1361], [10,10], 'r', [1,1361], [-10,-10], 'r')
+plot([1:length(maxOfAzimuths)], maxOfAzimuths/1000*180/pi, [1:length(minOfAzimuths)], minOfAzimuths/1000*180/pi, [1:length(azimuthDelta_mrad)], azimuthDelta_mrad/1000*180/pi, [1:length(magnitudeOfDeltas_mrad)], magnitudeOfDeltas_mrad/1000*180/pi, [1:length(yawWithMagCal_mrad/1000*180/pi)], yawWithMagCal_mrad/1000*180/pi, '-.')
+plot(get(gca, 'xlim'), [deadband_deg, deadband_deg], 'r', get(gca, 'xlim'), [-deadband_deg, -deadband_deg], 'r')
 hold off
 grid
 legend('maxOfAzimuths', 'minOfAzimuths', 'azimuthDelta', 'magnitudeOfDeltas', 'yawWithMagCal')
 ylabel('[deg]')
 xlabel('tick')
-title('Comparison of "Kill" Calculation Terms')
+title('Comparison of CheckKillShot Calculation Terms')
 %print -dfig ComparisonOfKillCalcTermsWithYaw.fig
-
-
-
-return;
-
 
 %21:58, 22:12 written down in Lowell's notes
 magCalTimeFromNotesZ   = [21.97+7-24, 22.20+7-24];
@@ -176,8 +176,6 @@ for i = magCal_indicies(1) - 5 : magCal_indicies(1) + 10;  %start looking at NEU
 	enemyLon = EnemyLon_e7(i)/10000000*pi/180;
 	enemyAlt = EnemyAlt_cm(i)/100;
 	
-	%*** FIX ME!!!! BAD PRACTICE!  SHITTY SHITY SHITY WORK!!! BOO! HISS! FOR FUCK'S SAKE MAN, DO IT RIGHT!
-	%*** seriously, put a copy of ecef2neu.m  and lla2ecef.m in a tools folder in the repo and add that folder to Octave's path so you're not carrying around copies of m-files to each testing directory. having three copies of the same script is fucking criminal.  YOU KNOW ONE COPY WILL GET CHANGED AND THEN THERE'LL BE SOME OBSCURE ERROR THAT WILL TAKE FOUR WEEK TO TRACK DOWN *AND* *THEN* YOU'LL CUSS YOURSELVE.  fuck.	
 	[X, Y, Z] = lla2ecef(lat, lon, alt);
 	[enemyX, enemyY, enemyZ] = lla2ecef(enemyLat, enemyLon, enemyAlt);
 	[pointingVector] = ecef2neu(lat, lon, enemyLat, enemyLon, X, Y, Z, enemyX, enemyY, enemyZ);
@@ -190,10 +188,6 @@ for i = magCal_indicies(1) - 5 : magCal_indicies(1) + 10;  %start looking at NEU
 	
 	toShootAzimuthCheck = atan2(east_m, north_m);
 	tSAErrorCheckPercentage = (tSA_rad(i) - toShootAzimuthCheck)/tSA_rad(i);
-	
-
-	
-	
 	
 	
 	figure;
