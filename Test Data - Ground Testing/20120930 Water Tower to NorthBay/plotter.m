@@ -6,7 +6,7 @@
 
 % TO DO:
 % [ ] see the nasty-gram below about making a new directory in the repo and adding that to Octave's path
-% [ ] add a +/- line to the tSA based on the deadband for killing that we set 
+% [ ] add a +/- line to the tSA based on the deadband tolerance; shoud be done like it is in the code--magnitudes of deltas, and not just +/- yaw & +/- pitch, becuase the height difference  between the DFs would confuse the kill calc'd online and offline.
 % [ ] make a sub-plot with the NEU data in the top and a yaw/yawWithMagCal/tsA time history in the bottom.  include a vertical line in the bottom plot that moves to indicate time progression
 % [ ] so far i've started with all the data for NEU and indicated when we have a DLC = 1.  Start from the opposite direction: start with DLC = 1 data and only plot the NEU data for those moments.
 % [ ] right now the header is hard-coded.  add step that reads in the header and sets the column data equal to the headers that are in the data file.
@@ -78,6 +78,81 @@ MagCalCounter        = data(:,17);
 time_sec             = (GPSTime_csec - GPSTime_csec(1))/100;
 dayOfWeekZulu        = 1; %testing conducted sunday at 2200L, so monday 0500Z, or the second day of the gps week which is zero-indexed. sunday = 0, monday = 1       
 gpsClockTimeZulu_hrs = (GPSTime_csec/100 - dayOfWeekZulu*24*3600)/3600;
+deadband_deg         = 175/1000*180/pi; %this data set was taken with rev 139;
+
+% // Metal Detector Magic!!!!! (like finding a gold coin on the beach)
+% double maxOfAzimuths = exMath.Max(toShootAzimuth_rad * 1000, yawWithMagCal_mrad);
+% double minOfAzimuths = exMath.Min(toShootAzimuth_rad * 1000, yawWithMagCal_mrad);
+% double azimuthDelta_mrad = exMath.Min((2 * exMath.PI * 1000 - maxOfAzimuths) + minOfAzimuths, maxOfAzimuths - minOfAzimuths); // always pos by nature.
+% double elevationDelta_mrad = toShootElevationAngle_rad * 1000 - positionMe.Pitch_mrad;
+% double magnitudeOfDeltas_mrad = System.Math.Pow(azimuthDelta_mrad * azimuthDelta_mrad + elevationDelta_mrad * elevationDelta_mrad, 0.5);
+%Vector math, FTW!
+%hmmm...we're all fuck up here... we know yawWithMagCal_mrad doesn't wrap about 2pi properly. this flows down into the magnitudeOfDeltas.  how did we ever detect a kill?
+%lots of plots for debug
+maxOfAzimuths = max(tSA_rad * 1000, yawWithMagCal_mrad);
+figure;
+plot(maxOfAzimuths/1000*180/pi);
+title('maxOfAzimuths_deg');
+grid;
+%print -dpng maxOfAzimuths.png
+
+minOfAzimuths = min(tSA_rad * 1000, yawWithMagCal_mrad);
+figure;
+plot(minOfAzimuths/1000*180/pi)
+title('minOfAzimuths_deg')
+grid;
+%print -dpng minOfAzimuths.png
+
+azimuthDelta_mrad = min((2*pi*1000 - maxOfAzimuths) + minOfAzimuths, maxOfAzimuths - minOfAzimuths);
+figure;
+plot(azimuthDelta_mrad/1000*180/pi)
+title('azimuthDelta_deg')
+grid;
+%print -dpng azimuthDelta.png
+
+elevationDelta_mrad = tSE_rad*1000 - Pitch_mrad;
+figure;
+plot(elevationDelta_mrad/1000*180/pi)
+title('elevationDelta_deg')
+grid;
+%print -dpng elevationDelta.png
+
+magnitudeOfDeltas_mrad = sqrt(azimuthDelta_mrad.^2 + elevationDelta_mrad.^2);
+figure;
+plot(magnitudeOfDeltas_mrad/1000*180/pi)
+title('magnitudeOfDeltas_deg')
+grid;
+%print -dpng magnitudeOfDeltas.png
+
+figure
+hold on
+plot([1:1361], maxOfAzimuths/1000*180/pi, [1:1361], minOfAzimuths/1000*180/pi, [1:1361], azimuthDelta_mrad/1000*180/pi, [1:1361], magnitudeOfDeltas_mrad/1000*180/pi)
+plot([1,1361], [10,10], 'r', [1,1361], [-10,-10], 'r')
+hold off
+grid
+legend('maxOfAzimuths', 'minOfAzimuths', 'azimuthDelta', 'magnitudeOfDeltas')
+ylabel('[deg]')
+xlabel('tick')
+title('Comparison of "Kill" Calculation Terms')
+%print -dfig ComparisonOfKillCalcTerms.fig
+
+%it's too lines lie right over top of each other
+figure
+hold on
+plot([1:1361], maxOfAzimuths/1000*180/pi, [1:1361], minOfAzimuths/1000*180/pi, [1:1361], azimuthDelta_mrad/1000*180/pi, [1:1361], magnitudeOfDeltas_mrad/1000*180/pi, [1:1361], yawWithMagCal_mrad/1000*180/pi, '-.' )
+plot([1,1361], [10,10], 'r', [1,1361], [-10,-10], 'r')
+hold off
+grid
+legend('maxOfAzimuths', 'minOfAzimuths', 'azimuthDelta', 'magnitudeOfDeltas', 'yawWithMagCal')
+ylabel('[deg]')
+xlabel('tick')
+title('Comparison of "Kill" Calculation Terms')
+%print -dfig ComparisonOfKillCalcTermsWithYaw.fig
+
+
+
+return;
+
 
 %21:58, 22:12 written down in Lowell's notes
 magCalTimeFromNotesZ   = [21.97+7-24, 22.20+7-24];
@@ -115,7 +190,12 @@ for i = magCal_indicies(1) - 5 : magCal_indicies(1) + 10;  %start looking at NEU
 	
 	toShootAzimuthCheck = atan2(east_m, north_m);
 	tSAErrorCheckPercentage = (tSA_rad(i) - toShootAzimuthCheck)/tSA_rad(i);
+	
 
+	
+	
+	
+	
 	figure;
 	hold on;
 	plot(0,0, 'go', east_m, north_m, 'bo');%, 'displayname', 'Offline tSA');
