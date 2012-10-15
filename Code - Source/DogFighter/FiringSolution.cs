@@ -25,7 +25,6 @@ namespace DogFighter
         private Trigger trigger;
 
         private UInt16 loggingCounter = 0;
-        private UInt16 magCalCounter = 0;
         private double toShootAzimuth_rad;
         private double yawOffsetFromMagCal_mrad = 0;
         private double yawWithMagCal_mrad;
@@ -178,7 +177,18 @@ namespace DogFighter
             double deadbandTolerance_mrad = 175; // 50mrad = ~2.5deg   //349mrad = ~20deg
 
             //we want to add magCal to yaw in order to keep the magnetic quantities together; the other option is to add it to toShootAzimuth (which is a GPS based angle)
-            yawWithMagCal_mrad = positionMe.Yaw_mrad - yawOffsetFromMagCal_mrad;
+            yawWithMagCal_mrad = positionMe.Yaw_mrad + yawOffsetFromMagCal_mrad;
+
+            // warning! Mod in Octave is not the same as % in c#.  
+            if (yawWithMagCal_mrad < 0)
+            {
+                yawWithMagCal_mrad = yawWithMagCal_mrad + (2 * exMath.PI * 1000);
+            }
+            else
+            {
+                yawWithMagCal_mrad = yawWithMagCal_mrad % 360;
+            }
+
 
             // Metal Detector Magic!!!!! (like finding a gold coin on the beach)
             double maxOfAzimuths = exMath.Max(toShootAzimuth_rad * 1000, yawWithMagCal_mrad);
@@ -219,10 +229,9 @@ namespace DogFighter
             {
                 loggingCounter = 0;
                 //logger.Initialize();
-                logger.Log(positionMe.GPSTimeInWeek_csec.ToString() + "\t" + positionMe.Latitude_e7.ToString() + "\t" + positionMe.Longitude_e7.ToString() + "\t" + positionMe.MSLAlt_cm.ToString() + "\t" + positionMe.PositionDOP_e2 + "\t" + toShootAzimuth_rad.ToString("F04") + "\t" + positionMe.Yaw_mrad.ToString() + "\t" + yawWithMagCal_mrad.ToString() + "\t" + toShootElevationAngle_rad.ToString("F04") + "\t" + positionMe.Pitch_mrad.ToString() + "\t" + distance_m.ToString("F04") + "\t" + positionEnemy.Latitude_e7.ToString() + "\t" + positionEnemy.Longitude_e7.ToString() + "\t" + positionEnemy.MSLAlt_cm.ToString() + "\t" + positionEnemy.PositionDOP_e2.ToString() + "\t" + dlcForLogging.ToString() + "\t" + magCalCounter.ToString());
+                logger.Log(positionMe.GPSTimeInWeek_csec.ToString() + "\t" + positionMe.Latitude_e7.ToString() + "\t" + positionMe.Longitude_e7.ToString() + "\t" + positionMe.MSLAlt_cm.ToString() + "\t" + positionMe.PositionDOP_e2 + "\t" + toShootAzimuth_rad.ToString("F04") + "\t" + positionMe.Yaw_mrad.ToString() + "\t" + yawWithMagCal_mrad.ToString() + "\t" + toShootElevationAngle_rad.ToString("F04") + "\t" + positionMe.Pitch_mrad.ToString() + "\t" + distance_m.ToString("F04") + "\t" + positionEnemy.Latitude_e7.ToString() + "\t" + positionEnemy.Longitude_e7.ToString() + "\t" + positionEnemy.MSLAlt_cm.ToString() + "\t" + positionEnemy.PositionDOP_e2.ToString() + "\t" + dlcForLogging.ToString() + "\t" + yawOffsetFromMagCal_mrad.ToString());
                 //logger.Close();
                 logger.Flush();
-
             }
         }
 
@@ -235,16 +244,35 @@ namespace DogFighter
             }
             //TODO: add a check to gaurd aginst completing the calucaltion if PDOP > distance_m
 
-            yawOffsetFromMagCal_mrad = positionMe.Yaw_mrad - toShootAzimuth_rad * 1000;
-            if (1570 <= yawOffsetFromMagCal_mrad && yawOffsetFromMagCal_mrad <= 4712)
+            // Step 1) Determine the magnitude of the delta between yaw and tsA
+            double maxOfYawOrTSA = exMath.Max(toShootAzimuth_rad * 1000, positionMe.Yaw_mrad);
+            double minOfYawOrTSA = exMath.Min(toShootAzimuth_rad * 1000, positionMe.Yaw_mrad);
+            double splitNOTCrosingNorth = maxOfYawOrTSA - minOfYawOrTSA;
+            double splitCrosingNorth = (2 * exMath.PI * 1000 - maxOfYawOrTSA) + minOfYawOrTSA;
+            yawOffsetFromMagCal_mrad = exMath.Min(splitCrosingNorth, splitNOTCrosingNorth);
+
+            // Step 2) Determine if yaw needs to move CW, or CCW to get to tsA.  CW = ture, CCW = false
+            if (yawOffsetFromMagCal_mrad == splitNOTCrosingNorth)
+            {
+                if (toShootAzimuth_rad * 1000 < positionMe.Yaw_mrad)
+                {
+                    // CCW
+                    yawOffsetFromMagCal_mrad = yawOffsetFromMagCal_mrad * (-1);
+                }
+            }
+            else // yaw and tsA are on opposite sides of the North line.
+            {
+                if (toShootAzimuth_rad *1000 > positionMe.Yaw_mrad)
+                {
+                    // CCW
+                    yawOffsetFromMagCal_mrad = yawOffsetFromMagCal_mrad * (-1);
+                }
+            }
+            
+            // random check, we should do more with this... but I intend to log yawOffsetFrom... so it will be evident if this becomes a problem
+            if (yawOffsetFromMagCal_mrad >= 1570 || yawOffsetFromMagCal_mrad <= -1570)
             {
                 forDebugPrint.TerminalPrintOut("\n\n\n\n\rAHHH FUCK! THE MagCal was greater than 90 degrees off... PANIC!");
-                yawOffsetFromMagCal_mrad = 0;
-            }
-            else if (yawOffsetFromMagCal_mrad > 4712)
-            {
-                yawOffsetFromMagCal_mrad = yawOffsetFromMagCal_mrad - (exMath.PI * 2 * 1000);
-                magCalCounter++;
             }
         }
 
@@ -254,3 +282,4 @@ namespace DogFighter
 
     }
 }
+

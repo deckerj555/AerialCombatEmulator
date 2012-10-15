@@ -9,72 +9,17 @@
 % [ ] add a +/- line to the tSA based on the deadband tolerance; shoud be done like it is in the code--magnitudes of deltas, and not just +/- yaw & +/- pitch, becuase the height difference  between the DFs would confuse the kill calc'd online and offline.
 % [ ] make a sub-plot with the NEU data in the top and a yaw/yawWithMagCal/tsA time history in the bottom.  include a vertical line in the bottom plot that moves to indicate time progression
 % [ ] so far i've started with all the data for NEU and indicated when we have a DLC = 1.  Start from the opposite direction: start with DLC = 1 data and only plot the NEU data for those moments.
-% [ ] right now the header is hard-coded.  add step that reads in the header and sets the column data equal to the headers that are in the data file.
+% [x] right now the header is hard-coded.  add step that reads in the header and sets the column data equal to the headers that are in the data file.
+%		Solution: Run dataLoader.m first (loated in Octave Utilities)
 % =================================================================================================================================================================================================
 
 % copy/paste into Octave to change the working directory.
 %chdir "C:\\Users\\jeff\\Documents\\DogFighterRepo\\trunk\\Test Data - Ground Testing\\20120930 Water Tower to NorthBay";
-
-%clear all;
+%chdir "C:\Users\lowelln\Documents\DogFighterSVN\trunk\Test Data - Ground Testing\20120930 Water Tower to NorthBay";
 close all;
 
-%in order to read the header fields into seperate cell entries, i think we'll have to loop thru the header, starting off at the returned position from the last loop.
-% [data, position, error] = fscanf(...)
-%fid = fopen("DF001 End of Eyrie.txt", 'r');
-%header = fscanf(fid, '%s', [1, 16]);
-%fclose(fid);
+dataLoader
 
-%i just hard coded it to keep moving
-header = {'GPSTime_csec'; 'Lat_e7'; 'Lon_e7'; 'Alt_cm'; 'PDOP_e2'; 'tSA_rad'; 'Yaw_mrad'; 'yawWithMagCal_mrad'; 'tSE_rad'; 'Pitch_mrad'; 'Distance_m'; 'EnemyLat_e7'; 'EnemyLon_e7'; 'EnemyAlt_cm'; 'EnemyPDOP_e2'; 'DLC'; 'MagCalCounter'};
-%1  = GPSTime_csec
-%2  = Lat_e7
-%3  = Lon_e7
-%4  = Alt_cm
-%5  = PDOP_e2
-%6  = tSA_rad
-%7  = Yaw_mrad
-%8  = yawWithMagCal_mrad
-%9  = tSE_rad
-%10 = Pitch_mrad
-%11 = Distance_m
-%12 = EnemyLat_e7
-%13 = EnemyLon_e7
-%14 = EnemyAlt_cm
-%15 = EnemyPDOP_e2
-%16 = DLC
-%17 = MagCalCounter
-
-%don't bother loading the file, if the workspace is already populated (at least with GPSTime_csec).
-if ~exist('GPSTime_csec', 'var')
-	data = dlmread("20120930 - DF001 at WaterTower.txt", "\t", 1, 0); %zero-indexed so don't read the header
-end
-	
-
-%find all the zero-time entries for GPS time and get rid of them
-nonZeroGpsTimes = find(data(:,1));
-data = data(nonZeroGpsTimes,:);
-
-%find all the remaining data points that are reporting the Puli Township in Nantou County, Taiwan. 
-nonCrapGpsSoluntions = find(data(:,2) ~= 240000000);
-data = data(nonCrapGpsSoluntions, :);
-
-GPSTime_csec         = data(:,1);
-Lat_e7               = data(:,2);
-Lon_e7               = data(:,3);
-Alt_cm               = data(:,4);
-PDOP_e2              = data(:,5);
-tSA_rad              = data(:,6);
-Yaw_mrad             = data(:,7);
-yawWithMagCal_mrad   = data(:,8);
-tSE_rad              = data(:,9);
-Pitch_mrad           = data(:,10);
-Distance_m           = data(:,11);
-EnemyLat_e7          = data(:,12);
-EnemyLon_e7          = data(:,13);
-EnemyAlt_cm          = data(:,14);
-EnemyPDOP_e2         = data(:,15);
-DLC                  = data(:,16);
-MagCalCounter        = data(:,17);
 time_sec             = (GPSTime_csec - GPSTime_csec(1))/100;
 dayOfWeekZulu        = 1; %testing conducted sunday at 2200L, so monday 0500Z, or the second day of the gps week which is zero-indexed. sunday = 0, monday = 1       
 gpsClockTimeZulu_hrs = (GPSTime_csec/100 - dayOfWeekZulu*24*3600)/3600;

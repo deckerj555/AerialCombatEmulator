@@ -22,7 +22,7 @@ namespace DogFighter
             StorageDevice.MountSD("SD", SPI.SPI_module.SPI1, Pins.GPIO_PIN_D10);
             filestream = new FileStream(@"\SD\DeckerRox.txt", FileMode.Append, FileAccess.Write, FileShare.None, 8);
             streamWriter = new StreamWriter(filestream);
-            streamWriter.WriteLine("#GPSTime_csec\tLat_e7\tLon_e7\tAlt_cm\tPDOP_e2\ttSA_rad\tYaw_mrad\tyawWithMagCal_mrad\ttSE_rad\tPitch_mrad\tDistance_m\tEnemyLat_e7\tEnemyLon_e7\tEnemyAlt_cm\tEnemyPDOP_e2\tDLC\tMagCalCounter");
+            streamWriter.WriteLine("GPSTime_csec\tLat_e7\tLon_e7\tAlt_cm\tPDOP_e2\ttSA_rad\tYaw_mrad\tyawWithMagCal_mrad\ttSE_rad\tPitch_mrad\tDistance_m\tEnemyLat_e7\tEnemyLon_e7\tEnemyAlt_cm\tEnemyPDOP_e2\tDLC\tyawOffsetFromMagCal_mrad");
             streamWriter.Flush();
         }
 
