@@ -57,6 +57,13 @@ namespace DogFighter
                 return roll_mrad;
             }
         }
+        public int Roll_deg
+        {
+            get
+            {
+                return roll_mrad * 180 / 3141; // Note this doesn't have the fidelity as an int that mrad has, but it will be better for printout.
+            }
+        }
         public int Pitch_mrad
         {
             get
@@ -64,11 +71,25 @@ namespace DogFighter
                 return pitch_mrad;
             }
         }
+        public int Pitch_deg
+        {
+            get
+            {
+                return pitch_mrad * 180 / 3141; // Note this doesn't have the fidelity as an int that mrad has, but it will be better for printout.
+            }
+        }
         public int Yaw_mrad
         {
             get
             {
                 return yaw_mrad; // No longer converting to true--this is taken care of in the firingSolution by initializing yawOffsetFromMagCal = 279;
+            }
+        }
+        public int Yaw_deg
+        {
+            get
+            {
+                return yaw_mrad * 180 / 3141; // Note this doesn't have the fidelity as an int that mrad has, but it will be better for printout.
             }
         }
 

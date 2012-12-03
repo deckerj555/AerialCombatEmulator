@@ -125,6 +125,13 @@ namespace DogFighter
                 return roll_mrad;
             }
         }
+        public int Roll_deg
+        {
+            get
+            {
+                return roll_mrad * 180 / 3141; // Note this doesn't have the fidelity as an int that mrad has, but it will be better for printout.
+            }
+        }
         public int Pitch_mrad
         {
             get
@@ -132,11 +139,25 @@ namespace DogFighter
                 return pitch_mrad;  //0 = level, pi = straight up, -pi = straight down
             }
         }
+        public int Pitch_deg
+        {
+            get
+            {                                   // //0 = level, pi = straight up, -pi = straight down
+                return pitch_mrad * 180 / 3141; // Note this doesn't have the fidelity as an int that mrad has, but it will be better for printout.
+            }
+        }
         public int Yaw_mrad
         {
             get
             {
                 return yaw_mrad; // 0 or 2pi = north, pi = south
+            }
+        }
+        public int Yaw_deg
+        {
+            get
+            {                                 // 0 or 2pi = north, pi = south
+                return yaw_mrad * 180 / 3141; // Note this doesn't have the fidelity as an int that mrad has, but it will be better for printout.
             }
         }
         public int Latitude_e7

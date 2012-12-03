@@ -80,7 +80,7 @@ namespace DogFighter
                 positionMeReceived = shitIn;
             } // Now this event handler, which is running on clocked cycle, has an uptodate positionMe
 
-            forDebugPrint.TerminalPrintOut("\n\rDOP_e2: " + positionMeReceived.PositionDOP_e2.ToString() + "  Time: " + positionMeReceived.GPSTimeInWeek_csec.ToString() + " Y: " + positionMeReceived.Yaw_mrad.ToString() + " P: " + positionMeReceived.Pitch_mrad.ToString());
+            forDebugPrint.TerminalPrintOut("\n\rDOP_e2: " + positionMeReceived.PositionDOP_e2.ToString() + "  Time: " + positionMeReceived.GPSTimeInWeek_csec.ToString() + " Y: " + positionMeReceived.Yaw_deg.ToString() + " P: " + positionMeReceived.Pitch_deg.ToString());
             #region gpsLed Blink(rate DOP dependent
             if (positionMeReceived.PositionDOP_e2 == 0)
             {
@@ -168,7 +168,8 @@ namespace DogFighter
 
             //double toShootAzimuth_rad = exMath.Atan(east_m / north_m);
             toShootAzimuth_rad = exMath.Atan(east_m / north_m) + toShootAzimuthOffset_rad;
-            forDebugPrint.TerminalPrintOut("\n\r\t\t\t\t\t\tTSA: " + toShootAzimuth_rad.ToString("F04") + "\trng_m: " + distance_m.ToString("F01"));
+            double toShootAzimuth_deg = toShootAzimuth_rad * 180 / 3.1415926; // To Do: Delete this if we aren't using it for printout anymore.  It's a waste of computation.  LTN 2012_12_02
+            forDebugPrint.TerminalPrintOut("\n\r\t\t\t\t\t\tTSA: " + toShootAzimuth_deg.ToString("F04") + "\trng_m: " + distance_m.ToString("F01"));
 
             double denominator = System.Math.Pow((System.Math.Pow(east_m, 2) + System.Math.Pow(north_m, 2)), 0.5);
             double toShootElevationAngle_rad = exMath.Atan(up_m / denominator);
