@@ -187,7 +187,7 @@ namespace DogFighter
             }
             else
             {
-                yawWithMagCal_mrad = yawWithMagCal_mrad % 360;
+                yawWithMagCal_mrad = yawWithMagCal_mrad % (2 * exMath.PI * 1000);
             }
 
 
