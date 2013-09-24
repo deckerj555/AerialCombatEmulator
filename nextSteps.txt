@@ -1,4 +1,5 @@
 
+
 Ah Fuck:
 [ ] WaterTower Test 
 	- Analyze data and compare to previous WaterTower test document.  
@@ -32,6 +33,7 @@ Testing:
 
 Hardware:
 [ ] radio RSSI led
+[x] Wire up DF002 for new (with flame on it) Venus GPS module.  Do this, and DF001 and DF002 will match.
 
 Software:
 [x] Netduino Lockup
