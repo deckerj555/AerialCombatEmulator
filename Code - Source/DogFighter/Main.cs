@@ -57,7 +57,7 @@ namespace DogFighter
             xbee.ReceivedImDeadDLC += new Radio.DLCReceivedDelegate(xbee_ReceivedDLCMe);
 
             // Call Testing here, after all wiring has been completed.
-            //Testing();
+            Testing();
 
 
             for (; ; )

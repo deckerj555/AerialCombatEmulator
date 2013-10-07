@@ -1,0 +1,63 @@
+Verifying MagCal wraps around 360 properly.
+
+Materials:
+Marker straigh line on coffee table.
+Indoors, near window.
+
+
+Test: 
+Load Code with Test Buffer and Fake Radio Stream active.
+Clear Logs
+Start Dog Figher Unit DF002 pointing roughly at Mt Defiance.
+Allow GPS signal to Reach DOP less than 6000 such that Yellow GPS LED is off.
+Start time with 90 degree pitch up and place down. (Note Local Clock time)
+Allow sit for 1 minute.
+MagCal 1 time.
+Allow sit for 1 minute.
+Rotate 360deg Counter clockwise (return to exact position).
+Allow sit for 1 minute.
+Rotate 360 CW (return to exact position).
+Allow sit for 1 minute.
+Rotate 180 CCW.
+Allow sit for 1 minute.
+Return to Shooting line.
+Allow sit for 1 minute.
+Approximate 20deg off target.
+Once stable, immediately MagCal.
+
+
+Execution:
+Power ON: 2:13:50
+DOP < 6000 @ 22:08:08
+90 deg pitch up at 22:19:00 local - caused DOP to jump to 30,000
+DOP in the 14,000s at 22:20:00, MagCal on time at 22:20:00
+Rotation CCW complete 22:21:10 - again just touching it for the rotation caused DOP to spike.
+Missed 22:22:00 mark.  Waiting for next whole minute.
+22:23:00 rotation 360 Clockwise on time. (roughly 15-20 seconds for full rotation)
+22:24:00 rotation 180 CCW on time (roughtly 7 second rotation)
+22:25:00 missed.  waiting for next whole minute
+22:26:05 return to original shooting line.
+22:28:00 Rotate approx 20 deg CW
+22:28:30 MagCal on line.  Not confirmed in putty.  too fast.
+22:29:10 MagCal repeated, confirmed in putty.
+22:30:00 Pitch up to confirm not killin.
+Power Off: 22:30:30
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

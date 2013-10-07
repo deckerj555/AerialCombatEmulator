@@ -32,6 +32,7 @@ Testing:
 
 
 Hardware:
+[ ] Wire up FTDI debug port to feed power to the netduino (For testing, we might want only 1 usb (the serial) running to the DF.  Note: Will having two power sources (when ftdi and programming with the netduino usb) mess it up?
 [ ] radio RSSI led
 [x] Wire up DF002 for new (with flame on it) Venus GPS module.  Do this, and DF001 and DF002 will match.
 
