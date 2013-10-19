@@ -1,3 +1,4 @@
+function dataLoader
 % FILE: dataLoader
 
 % PURPOSE: Built to be a generic data loading script, the data can then be used with plotter.m
@@ -12,11 +13,32 @@
 % [ ] right now the header is hard-coded.  add step that reads in the header and sets the column data equal to the headers that are in the data file.
 % =================================================================================================================================================================================================
 
-% copy/paste into Octave to change the working directory.
-%chdir "C:\\Users\\jeff\\Documents\\DogFighterRepo\\trunk\\Test Data - Ground Testing\\20120930 Water Tower to NorthBay";
-%chdir 'C:\Users\lowelln\Documents\DogFighterSVN\trunk\Test Data - Ground Testing\20120930 Water Tower to NorthBay';
 
-fileName = input("\nPlease type filename with extension:  ", "s")
+hostname = gethostname();
+
+if gethostname() == 'ace'
+	%cd 'C:\\Users\\jeff\\Documents\\DogFighterRepo\\trunk\\Test Data - Ground Testing\\20120930 Water Tower to NorthBay';
+	cd 'C:\\Users\\jeff\\Documents\\DogFighterRepo\\trunk\\Test Data - Ground Testing\\20131006 Short MagCal Check';
+	presentWorkingDirectory = pwd;
+	clc;
+	printf('Good evening, Master Decker!\nYour working directory has been changed to: \n%s\n\n', presentWorkingDirectory);
+	 
+else
+	cd = 'C:\Users\lowelln\Documents\DogFighterSVN\trunk\Test Data - Ground Testing\20120930 Water Tower to NorthBay';
+	presentWorkingDirectory = pwd;
+	clc;
+	printf('Oh, for fuck''s sake, Lowell...\nyour shit''s probably in here: %s', presentWorkingDirectory);
+	
+	 
+end
+
+
+
+printf('Here are the txt files in your present working directory:\n')
+dir *.txt
+printf('\n')
+
+fileName = input("\nPlease type filename: ", "s")
 
 
 % Creates a cell array with containing header strings
@@ -51,6 +73,8 @@ data = data(nonCrapGpsSoluntions, :);
 for i = 1:length(header)
 	assignin("base", headerS(i), data(:,i));	
 end
+
+endfunction
 
 
 
