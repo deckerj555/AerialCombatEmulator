@@ -1,4 +1,4 @@
-function dataLoader
+function dataLoader(presentWorkingDirectory)
 % FILE: dataLoader
 
 % PURPOSE: Built to be a generic data loading script, the data can then be used with plotter.m
@@ -16,21 +16,19 @@ function dataLoader
 
 hostname = gethostname();
 
-
-if isequal(hostname, 'ace')
+if strcmpi(hostname, 'ace')
 	%cd 'C:\\Users\\jeff\\Documents\\DogFighterRepo\\trunk\\Test Data - Ground Testing\\20120930 Water Tower to NorthBay';
-	cd 'C:\\Users\\jeff\\Documents\\DogFighterRepo\\trunk\\Test Data - Ground Testing\\20131006 Short MagCal Check';
-	presentWorkingDirectory = pwd;
-	clc;
-	printf('Good evening, Master Decker!\nYour working directory has been changed to: \n%s\n\n', presentWorkingDirectory);
+	cd(presentWorkingDirectory);
+	printf('\n\nGood evening, Master Decker!\nYour working directory has been changed to: \n%s\n\n', presentWorkingDirectory);
 
-else
+elseif strcmpi(hostname, 'Lenny')
 	%cd 'C:\Users\lowelln\Documents\DogFighterSVN\trunk\Test Data - Ground Testing\20120930 Water Tower to NorthBay';
-	presentWorkingDirectory = pwd;
-	clc;
-	printf('Oh, for fuck''s sake, Lowell...\nyour shit''s probably in here: %s', presentWorkingDirectory);
+	cd(presentWorkingDirectory);
+	printf('\n\nOh, for fuck''s sake, Lowell...\nyour shit''s probably in here: \n%s\n\n', presentWorkingDirectory);
 	
-	 
+else
+	printf('\n\nHey, wait a tick...who the fuck are you? \nFuck off and die, you fucking fuck.\n\n')
+	return
 end
 
 
@@ -41,9 +39,15 @@ printf('\n')
 
 fileName = input("\nPlease type filename: ", "s")
 
+%remove leading and trailing whitespaces
+fileName = strtrim(fileName);
+%remove the leading and trailing single quotes if present (replace them with nothing)
+fileName = regexprep(fileName, "\'", "");
 
 % Creates a cell array with containing header strings
-fid = fopen(fileName,'r');
+[fid, msg] = fopen(fileName,'r');
+
+%move the marker to the beginning of the file: FileRewind
 frewind(fid); 
 firstLine = fgetl(fid);
 tabs = find(firstLine == "\t");
