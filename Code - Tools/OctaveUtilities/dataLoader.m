@@ -16,15 +16,16 @@ function dataLoader
 
 hostname = gethostname();
 
-if gethostname() == 'ace'
+
+if isequal(hostname, 'ace')
 	%cd 'C:\\Users\\jeff\\Documents\\DogFighterRepo\\trunk\\Test Data - Ground Testing\\20120930 Water Tower to NorthBay';
 	cd 'C:\\Users\\jeff\\Documents\\DogFighterRepo\\trunk\\Test Data - Ground Testing\\20131006 Short MagCal Check';
 	presentWorkingDirectory = pwd;
 	clc;
 	printf('Good evening, Master Decker!\nYour working directory has been changed to: \n%s\n\n', presentWorkingDirectory);
-	 
+
 else
-	cd = 'C:\Users\lowelln\Documents\DogFighterSVN\trunk\Test Data - Ground Testing\20120930 Water Tower to NorthBay';
+	%cd 'C:\Users\lowelln\Documents\DogFighterSVN\trunk\Test Data - Ground Testing\20120930 Water Tower to NorthBay';
 	presentWorkingDirectory = pwd;
 	clc;
 	printf('Oh, for fuck''s sake, Lowell...\nyour shit''s probably in here: %s', presentWorkingDirectory);
